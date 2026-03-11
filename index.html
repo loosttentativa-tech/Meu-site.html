@@ -12,12 +12,12 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #000; /* Fundo Preto */
+            background-color: #000;
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Corações brilhantes de fundo em movimento */
+        /* Corações de fundo */
         .background-hearts {
             position: absolute;
             width: 100%;
@@ -30,57 +30,78 @@
         .heart {
             position: absolute;
             color: #ff6bdf;
-            text-shadow: 0 0 10px #ff6bdf, 0 0 20px #ff00ab;
-            animation: float 6s linear infinite;
-            opacity: 0.6;
+            text-shadow: 0 0 10px #ff6bdf;
+            animation: float 5s linear infinite;
         }
 
         @keyframes float {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            0% { transform: translateY(110vh) scale(0); opacity: 0; }
             50% { opacity: 0.8; }
-            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
         /* Cartão Neon */
         .card {
-            background: rgba(20, 20, 20, 0.8);
-            padding: 3rem;
+            background: rgba(15, 15, 15, 0.9);
+            padding: 2.5rem;
             border-radius: 30px;
             border: 2px solid #ff00ab;
-            box-shadow: 0 0 20px #ff00ab, inset 0 0 15px #ff00ab;
+            box-shadow: 0 0 20px #ff00ab;
             text-align: center;
-            backdrop-filter: blur(5px);
-            z-index: 1;
+            backdrop-filter: blur(8px);
+            max-width: 90%;
         }
 
         h1 {
             color: #fff;
-            font-size: 3.5rem;
+            font-size: 2.8rem;
             margin: 0;
-            text-transform: uppercase;
-            /* Efeito Neon */
-            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff00ab, 0 0 30px #ff00ab, 0 0 40px #ff00ab;
+            text-shadow: 0 0 10px #ff00ab, 0 0 20px #ff00ab;
             animation: pulse 1.5s infinite alternate;
         }
 
         p {
             color: #ffccff;
-            font-size: 1.4rem;
-            margin-top: 15px;
+            font-size: 1.2rem;
+            margin: 15px 0;
             font-weight: bold;
-            text-shadow: 0 0 5px #ff6bdf;
         }
 
-        .emoji {
-            font-size: 5rem;
-            display: block;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 0 10px #ff00ab);
+        /* Botão Estilizado */
+        .btn-mentira {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #00f2ff;
+            padding: 10px 25px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            box-shadow: 0 0 10px #00f2ff;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-mentira:hover {
+            background: #00f2ff;
+            color: #000;
+            box-shadow: 0 0 30px #00f2ff;
+        }
+
+        /* Mensagem de resposta */
+        #resposta {
+            margin-top: 20px;
+            color: #ff4757;
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px #ff4757;
+            display: none; /* Escondido no início */
         }
 
         @keyframes pulse {
-            from { transform: scale(1); text-shadow: 0 0 10px #fff, 0 0 20px #ff00ab; }
-            to { transform: scale(1.05); text-shadow: 0 0 20px #fff, 0 0 40px #ff00ab; }
+            from { transform: scale(1); }
+            to { transform: scale(1.03); }
         }
     </style>
 </head>
@@ -89,13 +110,24 @@
     <div class="background-hearts" id="hearts-container"></div>
 
     <div class="card">
-        <span class="emoji">💖</span>
+        <span style="font-size: 4rem;">💖</span>
         <h1>VAI TOMAR NO CU</h1>
         <p>você é chata pra caralho ✨</p>
+        
+        <button class="btn-mentira" onclick="mentirosa()">Não sou chata</button>
+        <div id="resposta">VOCÊ É CHATA SIM! 🙄</div>
     </div>
 
     <script>
-        // Gerador de corações aleatórios
+        // Lógica do botão
+        function mentirosa() {
+            const resp = document.getElementById('resposta');
+            resp.style.display = 'block';
+            // Faz o texto tremer ao aparecer
+            resp.style.animation = 'shake 0.5s ease';
+        }
+
+        // Corações voando
         const container = document.getElementById('hearts-container');
         function createHeart() {
             const heart = document.createElement('div');
@@ -103,12 +135,9 @@
             heart.innerHTML = '❤️';
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
             container.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 6000);
+            setTimeout(() => heart.remove(), 5000);
         }
         setInterval(createHeart, 300);
     </script>
