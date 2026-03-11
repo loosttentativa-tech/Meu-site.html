@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para uma pessoa especial ✨</title>
+    <title>Analisador de Chatice ✨</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,150 +13,89 @@
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #050505;
-            overflow: hidden;
-            font-family: 'Poppins', sans-serif;
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; background-color: #050505;
+            overflow: hidden; font-family: 'Poppins', sans-serif;
         }
 
-        /* Fundo com estrelas e corações */
         .background-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0; left: 0;
-            z-index: -1;
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;
         }
 
         .heart {
-            position: absolute;
-            color: var(--primary);
+            position: absolute; color: var(--primary);
             text-shadow: 0 0 15px var(--primary);
-            animation: float Up 4s ease-in infinite;
-            filter: blur(1px);
+            animation: floatUp 4s ease-in infinite;
         }
 
         @keyframes floatUp {
             0% { transform: translateY(110vh) rotate(0deg) scale(0); opacity: 0; }
-            20% { opacity: 1; }
             100% { transform: translateY(-20vh) rotate(360deg) scale(1.5); opacity: 0; }
         }
 
-        /* Cartão com Glassmorphism */
         .card {
             background: rgba(255, 255, 255, 0.03);
-            padding: 3.5rem 2rem;
-            border-radius: 40px;
+            padding: 2.5rem 1.5rem; border-radius: 40px;
             border: 1px solid rgba(255, 0, 171, 0.3);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(255, 0, 171, 0.1);
-            text-align: center;
-            backdrop-filter: blur(15px);
-            max-width: 400px;
-            width: 85%;
-            animation: cardEntrance 1s ease-out;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            text-align: center; backdrop-filter: blur(15px);
+            max-width: 380px; width: 90%;
         }
 
         h1 {
-            color: #fff;
-            font-size: 2.2rem;
-            margin: 0;
-            font-weight: 900;
-            line-height: 1.2;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            /* Texto Gradiente Neon */
+            color: #fff; font-size: 2rem; font-weight: 900;
             background: linear-gradient(to right, #fff, var(--primary), var(--secondary), #fff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shineText 3s linear infinite;
+            background-size: 200% auto; -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; animation: shineText 3s linear infinite;
         }
 
-        p {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1rem;
-            margin: 20px 0;
-            letter-spacing: 1px;
+        .btn-container {
+            display: flex; flex-direction: column; gap: 15px; margin-top: 25px;
         }
 
-        /* Botão Ultra Neon */
-        .btn-mentira {
-            background: transparent;
-            color: #fff;
-            border: 2px solid var(--secondary);
-            padding: 15px 35px;
-            font-size: 0.9rem;
-            border-radius: 100px;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 2px;
-            position: relative;
-            overflow: hidden;
+        .btn {
+            background: transparent; color: #fff; border-radius: 100px;
+            padding: 12px; font-size: 0.85rem; cursor: pointer;
+            text-transform: uppercase; font-weight: 700; letter-spacing: 1px;
             transition: 0.4s;
-            box-shadow: 0 0 15px var(--secondary);
         }
 
-        .btn-mentira:hover {
-            background: var(--secondary);
-            box-shadow: 0 0 40px var(--secondary);
-            transform: translateY(-3px);
+        .btn-mentira { border: 2px solid var(--secondary); box-shadow: 0 0 10px var(--secondary); }
+        .btn-mentira:hover { background: var(--secondary); box-shadow: 0 0 30px var(--secondary); }
+
+        .btn-medidor { border: 2px solid var(--cyan); box-shadow: 0 0 10px var(--cyan); color: var(--cyan); }
+        .btn-medidor:hover { background: var(--cyan); color: #000; box-shadow: 0 0 30px var(--cyan); }
+
+        /* Estilo do Medidor */
+        #medidor-container {
+            display: none; margin-top: 25px; text-align: left;
         }
 
-        /* Overlay da "Nova Aba" */
+        .progress-bg {
+            width: 100%; height: 12px; background: rgba(255,255,255,0.1);
+            border-radius: 10px; overflow: hidden; margin-top: 10px;
+            border: 1px solid rgba(0, 242, 255, 0.3);
+        }
+
+        .progress-fill {
+            width: 0%; height: 100%; background: var(--cyan);
+            box-shadow: 0 0 15px var(--cyan); transition: width 0.1s linear;
+        }
+
+        .status-text { color: var(--cyan); font-size: 0.9rem; font-weight: bold; }
+
         #nova-aba {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(10px);
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(10px);
         }
 
         .aba-content {
-            background: #111;
-            padding: 50px;
-            border-radius: 30px;
-            border: 2px solid #ff4757;
-            text-align: center;
-            box-shadow: 0 0 60px rgba(255, 71, 87, 0.4);
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #111; padding: 40px; border-radius: 30px;
+            border: 2px solid #ff4757; text-align: center;
         }
 
-        .aba-content h2 {
-            color: #ff4757;
-            font-size: 2.5rem;
-            text-shadow: 0 0 20px rgba(255, 71, 87, 0.6);
-            margin-bottom: 20px;
-        }
-
-        .btn-fechar {
-            background: #fff;
-            color: #000;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-weight: 900;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-fechar:hover {
-            background: #ff4757;
-            color: white;
-        }
-
-        /* Animações */
         @keyframes shineText { to { background-position: 200% center; } }
-        @keyframes cardEntrance { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -164,51 +103,78 @@
     <div class="background-elements" id="bg-container"></div>
 
     <div class="card">
-        <div style="font-size: 4.5rem; filter: drop-shadow(0 0 15px var(--primary)); margin-bottom: 10px;">💖</div>
+        <div style="font-size: 4rem; margin-bottom: 10px;">🌸</div>
         <h1>Você é<br>muito chata</h1>
-        <p>chata pra caralho ✨</p>
         
-        <button class="btn-mentira" onclick="abrirAba()">Não sou chata</button>
+        <div class="btn-container">
+            <button class="btn btn-mentira" onclick="abrirAba()">Não sou chata</button>
+            <button class="btn btn-medidor" onclick="iniciarMedidor()">Porcentagem de chatice</button>
+        </div>
+
+        <div id="medidor-container">
+            <div class="status-text" id="status">Analisando DNA chato... <span id="percent">0%</span></div>
+            <div class="progress-bg">
+                <div class="progress-fill" id="fill"></div>
+            </div>
+            <p id="msg-final" style="display:none; color: #fff; margin-top: 10px; font-size: 0.9rem;">
+                ⚠️ Nível crítico detectado!
+            </p>
+        </div>
     </div>
 
     <div id="nova-aba">
         <div class="aba-content">
-            <h2>É CHATA SIM! 🙄</h2>
-            <p style="color: #aaa; margin-bottom: 30px;">A inteligência artificial confirmou.</p>
-            <button class="btn-fechar" onclick="fecharAba()">ACEITAR A VERDADE</button>
+            <h2 style="color: #ff4757; font-size: 2rem;">É CHATA SIM! 🙄</h2>
+            <button style="margin-top:20px; padding:10px 20px; cursor:pointer;" onclick="fecharAba()">ACEITAR</button>
         </div>
     </div>
 
     <script>
-        function abrirAba() {
-            document.getElementById('nova-aba').style.display = 'flex';
+        function abrirAba() { document.getElementById('nova-aba').style.display = 'flex'; }
+        function fecharAba() { document.getElementById('nova-aba').style.display = 'none'; }
+
+        function iniciarMedidor() {
+            const container = document.getElementById('medidor-container');
+            const fill = document.getElementById('fill');
+            const percentText = document.getElementById('percent');
+            const statusText = document.getElementById('status');
+            const msgFinal = document.getElementById('msg-final');
+            
+            container.style.display = 'block';
+            let width = 0;
+            
+            const intervalo = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(intervalo);
+                    statusText.innerHTML = "ANÁLISE CONCLUÍDA: 100%";
+                    msgFinal.style.display = 'block';
+                } else {
+                    width++;
+                    fill.style.width = width + '%';
+                    percentText.innerHTML = width + '%';
+                    
+                    // Mudar mensagens durante o processo
+                    if(width === 30) statusText.innerHTML = "Escaneando reclamações... " + width + "%";
+                    if(width === 60) statusText.innerHTML = "Medindo drama... " + width + "%";
+                    if(width === 90) statusText.innerHTML = "Quase lá... " + width + "%";
+                }
+            }, 50); // Velocidade do carregamento
         }
 
-        function fecharAba() {
-            document.getElementById('nova-aba').style.display = 'none';
-        }
-
-        // Sistema de partículas (corações e estrelas)
-        const container = document.getElementById('bg-container');
+        // Partículas
+        const bg = document.getElementById('bg-container');
         const icons = ['❤️', '💖', '✨', '🌸'];
-
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.classList.add('heart');
-            particle.innerHTML = icons[Math.floor(Math.random() * icons.length)];
-            
-            particle.style.left = Math.random() * 100 + 'vw';
-            particle.style.fontSize = (Math.random() * 15 + 10) + 'px';
-            
-            const duration = (Math.random() * 3 + 2);
-            particle.style.animation = `floatUp ${duration}s ease-in forwards`;
-            
-            container.appendChild(particle);
-            setTimeout(() => particle.remove(), duration * 1000);
-        }
-
-        setInterval(createParticle, 200);
+        setInterval(() => {
+            const p = document.createElement('div');
+            p.classList.add('heart');
+            p.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.fontSize = (Math.random() * 15 + 10) + 'px';
+            const dur = Math.random() * 3 + 2;
+            p.style.animation = `floatUp ${dur}s ease-in forwards`;
+            bg.appendChild(p);
+            setTimeout(() => p.remove(), dur * 1000);
+        }, 200);
     </script>
-
 </body>
 </html>
