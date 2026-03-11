@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surpresa!</title>
+    <title>Para uma pessoa especial ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #ff00ab;
+            --secondary: #bc13fe;
+            --cyan: #00f2ff;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -12,139 +19,163 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #000;
+            background-color: #050505;
             overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
-        /* Corações de fundo */
-        .background-hearts {
+        /* Fundo com estrelas e corações */
+        .background-elements {
             position: absolute;
             width: 100%;
             height: 100%;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             z-index: -1;
         }
 
         .heart {
             position: absolute;
-            color: #ff6bdf;
-            text-shadow: 0 0 10px #ff6bdf;
-            animation: float 5s linear infinite;
+            color: var(--primary);
+            text-shadow: 0 0 15px var(--primary);
+            animation: float Up 4s ease-in infinite;
+            filter: blur(1px);
         }
 
-        @keyframes float {
-            0% { transform: translateY(110vh) scale(0); opacity: 0; }
-            50% { opacity: 0.8; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg) scale(0); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-20vh) rotate(360deg) scale(1.5); opacity: 0; }
         }
 
-        /* Cartão Principal */
+        /* Cartão com Glassmorphism */
         .card {
-            background: rgba(15, 15, 15, 0.9);
-            padding: 2.5rem;
-            border-radius: 30px;
-            border: 2px solid #ff00ab;
-            box-shadow: 0 0 20px #ff00ab;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 3.5rem 2rem;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 0, 171, 0.3);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(255, 0, 171, 0.1);
             text-align: center;
-            backdrop-filter: blur(8px);
-            max-width: 90%;
+            backdrop-filter: blur(15px);
+            max-width: 400px;
+            width: 85%;
+            animation: cardEntrance 1s ease-out;
         }
 
         h1 {
             color: #fff;
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             margin: 0;
-            text-shadow: 0 0 10px #ff00ab, 0 0 20px #ff00ab;
+            font-weight: 900;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            /* Texto Gradiente Neon */
+            background: linear-gradient(to right, #fff, var(--primary), var(--secondary), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineText 3s linear infinite;
         }
 
-        /* Botão Roxo Neon */
+        p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            margin: 20px 0;
+            letter-spacing: 1px;
+        }
+
+        /* Botão Ultra Neon */
         .btn-mentira {
             background: transparent;
             color: #fff;
-            border: 2px solid #bc13fe;
-            padding: 12px 30px;
-            font-size: 1rem;
-            border-radius: 50px;
+            border: 2px solid var(--secondary);
+            padding: 15px 35px;
+            font-size: 0.9rem;
+            border-radius: 100px;
             cursor: pointer;
             text-transform: uppercase;
-            font-weight: bold;
-            box-shadow: 0 0 15px #bc13fe;
-            transition: all 0.3s ease;
-            margin-top: 25px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+            box-shadow: 0 0 15px var(--secondary);
         }
 
         .btn-mentira:hover {
-            background: #bc13fe;
-            box-shadow: 0 0 30px #bc13fe;
-            transform: scale(1.05);
+            background: var(--secondary);
+            box-shadow: 0 0 40px var(--secondary);
+            transform: translateY(-3px);
         }
 
-        /* Efeito de "Nova Aba" (Overlay) */
+        /* Overlay da "Nova Aba" */
         #nova-aba {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 999;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .aba-content {
-            text-align: center;
+            background: #111;
+            padding: 50px;
+            border-radius: 30px;
             border: 2px solid #ff4757;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 0 40px #ff4757;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(255, 71, 87, 0.4);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .aba-content h2 {
             color: #ff4757;
-            font-size: 3rem;
-            text-shadow: 0 0 20px #ff4757;
-            margin: 0;
+            font-size: 2.5rem;
+            text-shadow: 0 0 20px rgba(255, 71, 87, 0.6);
+            margin-bottom: 20px;
         }
 
         .btn-fechar {
-            margin-top: 20px;
             background: #fff;
+            color: #000;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 900;
             cursor: pointer;
-            font-weight: bold;
+            transition: 0.3s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
+        .btn-fechar:hover {
+            background: #ff4757;
+            color: white;
         }
+
+        /* Animações */
+        @keyframes shineText { to { background-position: 200% center; } }
+        @keyframes cardEntrance { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="background-hearts" id="hearts-container"></div>
+    <div class="background-elements" id="bg-container"></div>
 
     <div class="card">
-        <span style="font-size: 4rem;">💖</span>
-        <h1>você é muito chata</h1>
-        <p style="color: #ffccff; font-weight: bold;">você é chata pra caralho ✨</p>
+        <div style="font-size: 4.5rem; filter: drop-shadow(0 0 15px var(--primary)); margin-bottom: 10px;">💖</div>
+        <h1>Você é<br>muito chata</h1>
+        <p>chata pra caralho ✨</p>
         
         <button class="btn-mentira" onclick="abrirAba()">Não sou chata</button>
     </div>
 
     <div id="nova-aba">
         <div class="aba-content">
-            <h2>VOCÊ É CHATA SIM! 🙄</h2>
-            <p style="color: white;">Não adianta tentar negar.</p>
-            <button class="btn-fechar" onclick="fecharAba()">Aceitar a verdade</button>
+            <h2>É CHATA SIM! 🙄</h2>
+            <p style="color: #aaa; margin-bottom: 30px;">A inteligência artificial confirmou.</p>
+            <button class="btn-fechar" onclick="fecharAba()">ACEITAR A VERDADE</button>
         </div>
     </div>
 
@@ -157,19 +188,26 @@
             document.getElementById('nova-aba').style.display = 'none';
         }
 
-        // Corações flutuantes
-        const container = document.getElementById('hearts-container');
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
-            container.appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
+        // Sistema de partículas (corações e estrelas)
+        const container = document.getElementById('bg-container');
+        const icons = ['❤️', '💖', '✨', '🌸'];
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('heart');
+            particle.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+            
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.fontSize = (Math.random() * 15 + 10) + 'px';
+            
+            const duration = (Math.random() * 3 + 2);
+            particle.style.animation = `floatUp ${duration}s ease-in forwards`;
+            
+            container.appendChild(particle);
+            setTimeout(() => particle.remove(), duration * 1000);
         }
-        setInterval(createHeart, 300);
+
+        setInterval(createParticle, 200);
     </script>
 
 </body>
