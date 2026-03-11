@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analisador de Chatice ✨</title>
+    <title>Analisador de Chatice Pro ✨</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -41,6 +41,7 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             text-align: center; backdrop-filter: blur(15px);
             max-width: 380px; width: 90%;
+            animation: fadeIn 1s ease;
         }
 
         h1 {
@@ -58,16 +59,16 @@
             background: transparent; color: #fff; border-radius: 100px;
             padding: 12px; font-size: 0.85rem; cursor: pointer;
             text-transform: uppercase; font-weight: 700; letter-spacing: 1px;
-            transition: 0.4s;
+            transition: 0.4s; outline: none;
         }
 
         .btn-mentira { border: 2px solid var(--secondary); box-shadow: 0 0 10px var(--secondary); }
-        .btn-mentira:hover { background: var(--secondary); box-shadow: 0 0 30px var(--secondary); }
+        .btn-mentira:hover { background: var(--secondary); box-shadow: 0 0 30px var(--secondary); transform: scale(1.02); }
 
         .btn-medidor { border: 2px solid var(--cyan); box-shadow: 0 0 10px var(--cyan); color: var(--cyan); }
-        .btn-medidor:hover { background: var(--cyan); color: #000; box-shadow: 0 0 30px var(--cyan); }
+        .btn-medidor:hover { background: var(--cyan); color: #000; box-shadow: 0 0 30px var(--cyan); transform: scale(1.02); }
 
-        /* Estilo do Medidor */
+        /* Medidor */
         #medidor-container {
             display: none; margin-top: 25px; text-align: left;
         }
@@ -83,19 +84,21 @@
             box-shadow: 0 0 15px var(--cyan); transition: width 0.1s linear;
         }
 
-        .status-text { color: var(--cyan); font-size: 0.9rem; font-weight: bold; }
+        .status-text { color: var(--cyan); font-size: 0.8rem; font-weight: bold; height: 20px; }
 
-        #nova-aba {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(10px);
+        /* Estilo para o número final */
+        #resultado-final {
+            display: none; margin-top: 15px; padding: 10px;
+            border-radius: 15px; background: rgba(255, 71, 87, 0.2);
+            border: 1px solid #ff4757; color: #fff;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .aba-content {
-            background: #111; padding: 40px; border-radius: 30px;
-            border: 2px solid #ff4757; text-align: center;
-        }
+        #valor-sorteado { font-size: 2rem; display: block; color: #ff4757; font-weight: 900; text-shadow: 0 0 10px #ff4757; }
 
         @keyframes shineText { to { background-position: 200% center; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -108,24 +111,26 @@
         
         <div class="btn-container">
             <button class="btn btn-mentira" onclick="abrirAba()">Não sou chata</button>
-            <button class="btn btn-medidor" onclick="iniciarMedidor()">Porcentagem de chatice</button>
+            <button class="btn btn-medidor" id="btn-m" onclick="iniciarMedidor()">Porcentagem de chatice</button>
         </div>
 
         <div id="medidor-container">
-            <div class="status-text" id="status">Analisando DNA chato... <span id="percent">0%</span></div>
+            <div class="status-text" id="status">Iniciando protocolo...</div>
             <div class="progress-bg">
                 <div class="progress-fill" id="fill"></div>
             </div>
-            <p id="msg-final" style="display:none; color: #fff; margin-top: 10px; font-size: 0.9rem;">
-                ⚠️ Nível crítico detectado!
-            </p>
+            
+            <div id="resultado-final">
+                SEU NÍVEL: <span id="valor-sorteado">0%</span>
+                <small id="sub-msg">Insuportável detectada!</small>
+            </div>
         </div>
     </div>
 
-    <div id="nova-aba">
-        <div class="aba-content">
-            <h2 style="color: #ff4757; font-size: 2rem;">É CHATA SIM! 🙄</h2>
-            <button style="margin-top:20px; padding:10px 20px; cursor:pointer;" onclick="fecharAba()">ACEITAR</button>
+    <div id="nova-aba" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:1000; display:none; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
+        <div style="background:#111; padding:40px; border-radius:30px; border:2px solid #ff4757; text-align:center;">
+            <h2 style="color:#ff4757; font-family:'Poppins';">É CHATA SIM! 🙄</h2>
+            <button style="margin-top:20px; padding:10px 20px; font-weight:bold; cursor:pointer;" onclick="fecharAba()">ADMITIR</button>
         </div>
     </div>
 
@@ -134,11 +139,16 @@
         function fecharAba() { document.getElementById('nova-aba').style.display = 'none'; }
 
         function iniciarMedidor() {
+            // Desativar botão após clique
+            document.getElementById('btn-m').disabled = true;
+            document.getElementById('btn-m').style.opacity = '0.5';
+            document.getElementById('btn-m').style.cursor = 'not-allowed';
+
             const container = document.getElementById('medidor-container');
             const fill = document.getElementById('fill');
-            const percentText = document.getElementById('percent');
             const statusText = document.getElementById('status');
-            const msgFinal = document.getElementById('msg-final');
+            const resultado = document.getElementById('resultado-final');
+            const valorFinal = document.getElementById('valor-sorteado');
             
             container.style.display = 'block';
             let width = 0;
@@ -146,19 +156,26 @@
             const intervalo = setInterval(() => {
                 if (width >= 100) {
                     clearInterval(intervalo);
-                    statusText.innerHTML = "ANÁLISE CONCLUÍDA: 100%";
-                    msgFinal.style.display = 'block';
+                    statusText.innerHTML = "ERRO: CAPACIDADE EXCEDIDA!";
+                    
+                    // Sorteia entre 100 e 166
+                    const sorteio = Math.floor(Math.random() * (166 - 100 + 1)) + 100;
+                    valorFinal.innerHTML = sorteio + "%";
+                    resultado.style.display = 'block';
+                    
+                    if(sorteio > 150) {
+                        document.getElementById('sub-msg').innerHTML = "Nível lendário de chatice! 🏆";
+                    }
                 } else {
                     width++;
                     fill.style.width = width + '%';
-                    percentText.innerHTML = width + '%';
                     
-                    // Mudar mensagens durante o processo
-                    if(width === 30) statusText.innerHTML = "Escaneando reclamações... " + width + "%";
-                    if(width === 60) statusText.innerHTML = "Medindo drama... " + width + "%";
-                    if(width === 90) statusText.innerHTML = "Quase lá... " + width + "%";
+                    if(width < 30) statusText.innerHTML = "Escaneando drama...";
+                    else if(width < 60) statusText.innerHTML = "Analisando áudios longos...";
+                    else if(width < 90) statusText.innerHTML = "Calculando paciência necessária...";
+                    else statusText.innerHTML = "Finalizando diagnóstico...";
                 }
-            }, 50); // Velocidade do carregamento
+            }, 40);
         }
 
         // Partículas
@@ -174,7 +191,7 @@
             p.style.animation = `floatUp ${dur}s ease-in forwards`;
             bg.appendChild(p);
             setTimeout(() => p.remove(), dur * 1000);
-        }, 200);
+        }, 250);
     </script>
 </body>
 </html>
