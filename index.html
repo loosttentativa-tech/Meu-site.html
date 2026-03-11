@@ -40,7 +40,7 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* Cartão Neon */
+        /* Cartão Principal */
         .card {
             background: rgba(15, 15, 15, 0.9);
             padding: 2.5rem;
@@ -57,51 +57,74 @@
             font-size: 2.8rem;
             margin: 0;
             text-shadow: 0 0 10px #ff00ab, 0 0 20px #ff00ab;
-            animation: pulse 1.5s infinite alternate;
         }
 
-        p {
-            color: #ffccff;
-            font-size: 1.2rem;
-            margin: 15px 0;
-            font-weight: bold;
-        }
-
-        /* Botão Estilizado */
+        /* Botão Roxo Neon */
         .btn-mentira {
             background: transparent;
             color: #fff;
-            border: 2px solid #00f2ff;
-            padding: 10px 25px;
+            border: 2px solid #bc13fe;
+            padding: 12px 30px;
             font-size: 1rem;
             border-radius: 50px;
             cursor: pointer;
             text-transform: uppercase;
             font-weight: bold;
-            box-shadow: 0 0 10px #00f2ff;
+            box-shadow: 0 0 15px #bc13fe;
             transition: all 0.3s ease;
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         .btn-mentira:hover {
-            background: #00f2ff;
-            color: #000;
-            box-shadow: 0 0 30px #00f2ff;
+            background: #bc13fe;
+            box-shadow: 0 0 30px #bc13fe;
+            transform: scale(1.05);
         }
 
-        /* Mensagem de resposta */
-        #resposta {
-            margin-top: 20px;
+        /* Efeito de "Nova Aba" (Overlay) */
+        #nova-aba {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .aba-content {
+            text-align: center;
+            border: 2px solid #ff4757;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 40px #ff4757;
+        }
+
+        .aba-content h2 {
             color: #ff4757;
-            font-weight: bold;
-            font-size: 1.5rem;
-            text-shadow: 0 0 10px #ff4757;
-            display: none; /* Escondido no início */
+            font-size: 3rem;
+            text-shadow: 0 0 20px #ff4757;
+            margin: 0;
         }
 
-        @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.03); }
+        .btn-fechar {
+            margin-top: 20px;
+            background: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
@@ -112,22 +135,29 @@
     <div class="card">
         <span style="font-size: 4rem;">💖</span>
         <h1>VAI TOMAR NO CU</h1>
-        <p>você é chata pra caralho ✨</p>
+        <p style="color: #ffccff; font-weight: bold;">você é chata pra caralho ✨</p>
         
-        <button class="btn-mentira" onclick="mentirosa()">Não sou chata</button>
-        <div id="resposta">VOCÊ É CHATA SIM! 🙄</div>
+        <button class="btn-mentira" onclick="abrirAba()">Não sou chata</button>
+    </div>
+
+    <div id="nova-aba">
+        <div class="aba-content">
+            <h2>VOCÊ É CHATA SIM! 🙄</h2>
+            <p style="color: white;">Não adianta tentar negar.</p>
+            <button class="btn-fechar" onclick="fecharAba()">Aceitar a verdade</button>
+        </div>
     </div>
 
     <script>
-        // Lógica do botão
-        function mentirosa() {
-            const resp = document.getElementById('resposta');
-            resp.style.display = 'block';
-            // Faz o texto tremer ao aparecer
-            resp.style.animation = 'shake 0.5s ease';
+        function abrirAba() {
+            document.getElementById('nova-aba').style.display = 'flex';
         }
 
-        // Corações voando
+        function fecharAba() {
+            document.getElementById('nova-aba').style.display = 'none';
+        }
+
+        // Corações flutuantes
         const container = document.getElementById('hearts-container');
         function createHeart() {
             const heart = document.createElement('div');
