@@ -14,65 +14,59 @@ body {
     overflow: hidden;
 }
 
-/* CENTRALIZAÇÃO */
+/* FUNDO BRILHO LUXO */
+.bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.bg span {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 0 10px white, 0 0 25px gold;
+    animation: brilho 8s linear infinite;
+    opacity: 0;
+}
+
+@keyframes brilho {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* CENTRAL */
 .wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    z-index: 1;
+    position: relative;
 }
 
-/* LOADER */
-.loader {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: #0a0a0a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    flex-direction: column;
-    animation: sumir 1s ease forwards;
-    animation-delay: 2.5s;
-}
-
-.loader h1 {
-    letter-spacing: 6px;
-    font-size: 18px;
-    animation: glow 2s ease-in-out infinite;
-}
-
-@keyframes glow {
-    0%,100% { opacity: 0.4; }
-    50% { opacity: 1; text-shadow: 0 0 15px gold; }
-}
-
-@keyframes sumir {
-    to {
-        opacity: 0;
-        visibility: hidden;
-    }
-}
-
-/* ENTRADA CINEMATOGRÁFICA */
+/* CARD */
 .container {
     text-align: center;
     background: rgba(17,17,17,0.9);
-    padding: 40px;
+    padding: 30px;
     border-radius: 20px;
-    max-width: 350px;
     width: 90%;
-
-    opacity: 0;
-    transform: scale(0.9) translateY(30px);
-    filter: blur(10px);
+    max-width: 350px;
 
     animation: entrada 1.5s ease forwards;
-    animation-delay: 2.7s;
 }
 
 @keyframes entrada {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(40px);
+        filter: blur(10px);
+    }
     to {
         opacity: 1;
         transform: scale(1) translateY(0);
@@ -80,26 +74,34 @@ body {
     }
 }
 
+/* IMAGENS */
+.group-img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #333;
+}
+
 /* BOTÕES */
 .btn {
-    position: relative;
     display: block;
-    padding: 15px;
-    margin: 15px 0;
-    border-radius: 14px;
+    margin: 10px 0 20px;
+    padding: 12px;
+    border-radius: 12px;
     text-decoration: none;
-    color: #fff;
+    color: white;
     font-weight: bold;
     background: #111;
+    position: relative;
     overflow: hidden;
 }
 
-/* BORDA NEON 360 */
+/* NEON */
 .btn::before {
     content: "";
     position: absolute;
     inset: -2px;
-    border-radius: 16px;
+    border-radius: 14px;
     animation: girar 4s linear infinite;
     z-index: -1;
 }
@@ -109,7 +111,7 @@ body {
     position: absolute;
     inset: 2px;
     background: #111;
-    border-radius: 12px;
+    border-radius: 10px;
     z-index: -1;
 }
 
@@ -117,29 +119,27 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* IMPÉRIO (OURO) */
 .imperio::before {
     background: conic-gradient(transparent, gold, #ffd700, gold, transparent);
 }
 
-.imperio:hover {
-    box-shadow: 0 0 25px gold;
-    transform: scale(1.05);
-}
-
-/* DIAMOND (BRANCO) */
 .diamond::before {
     background: conic-gradient(transparent, #fff, #ccc, #fff, transparent);
 }
 
-.diamond:hover {
-    box-shadow: 0 0 25px #fff;
-    transform: scale(1.05);
+/* BOTÃO PARCERIA */
+.parceria {
+    background: linear-gradient(45deg, #111, #1c1c1c);
+    border: 1px solid gold;
+}
+
+.parceria:hover {
+    box-shadow: 0 0 20px gold;
 }
 
 /* TEXTO */
-h2 { letter-spacing: 2px; }
-p { color: #aaa; }
+h2 { margin-bottom: 5px; }
+p { color: #aaa; font-size: 14px; }
 
 .footer {
     font-size: 12px;
@@ -151,29 +151,48 @@ p { color: #aaa; }
 
 <body>
 
-<!-- LOADER -->
-<div class="loader">
-    <h1>entrar</h1></h1>
+<!-- FUNDO -->
+<div class="bg">
+    <span style="left:10%; animation-delay:0s;"></span>
+    <span style="left:20%; animation-delay:2s;"></span>
+    <span style="left:30%; animation-delay:4s;"></span>
+    <span style="left:40%; animation-delay:1s;"></span>
+    <span style="left:50%; animation-delay:3s;"></span>
+    <span style="left:60%; animation-delay:5s;"></span>
+    <span style="left:70%; animation-delay:2s;"></span>
+    <span style="left:80%; animation-delay:4s;"></span>
+    <span style="left:90%; animation-delay:1s;"></span>
 </div>
 
 <!-- CONTEÚDO -->
 <div class="wrapper">
-    <div class="container">
-        <h2>👑 ENGAJA ELITE</h2>
-        <p>Acesso ao crescimento de alto nível</p>
+<div class="container">
 
-        <a class="btn imperio" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU?mode=gi_t" target="_blank">
-            🔱 ENGAJA IMPÉRIO
-        </a>
+    <h2>👑 ENGAJA ELITE</h2>
+    <p>Crescimento de alto nível</p>
 
-        <a class="btn diamond" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4" target="_blank">
-            💎 ENGAJA DIAMOND
-        </a>
+    <!-- GRUPO 1 -->
+    <img class="group-img" src="https://via.placeholder.com/300x150" alt="Grupo Império">
+    <a class="btn imperio" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU?mode=gi_t">
+        🔱 ENGAJA IMPÉRIO
+    </a>
 
-        <div class="footer">
-            Exclusivo • Premium • Limitado
-        </div>
+    <!-- GRUPO 2 -->
+    <img class="group-img" src="https://via.placeholder.com/300x150" alt="Grupo Diamond">
+    <a class="btn diamond" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4">
+        💎 ENGAJA DIAMOND
+    </a>
+
+    <!-- PARCERIA -->
+    <a class="btn parceria" href="https://wa.me/SEUNUMEROAQUI">
+        🤝 Falar sobre parceria
+    </a>
+
+    <div class="footer">
+        Exclusivo • Premium • Limitado
     </div>
+
+</div>
 </div>
 
 </body>
