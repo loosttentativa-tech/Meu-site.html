@@ -9,117 +9,132 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: #0a0a0a;
+    background: #050505;
     color: #fff;
     overflow: hidden;
 }
 
-/* FUNDO AURA LUXO */
+/* LOADER */
+.loader {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    animation: sumir 2.5s forwards;
+}
+
+.loader h1 {
+    font-size: 28px;
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, gold, white, gold);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: brilho 2s linear infinite;
+}
+
+@keyframes brilho {
+    0% { background-position: 0%; }
+    100% { background-position: 200%; }
+}
+
+@keyframes sumir {
+    80% { opacity: 1; }
+    100% { opacity: 0; visibility: hidden; }
+}
+
+/* FUNDO */
 body::before {
     content: "";
     position: fixed;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle at center, rgba(255,215,0,0.08), transparent 60%);
-    animation: luzFundo 12s linear infinite;
-    z-index: 0;
+    background: radial-gradient(circle, rgba(255,215,0,0.08), transparent 60%);
+    animation: girarBg 15s linear infinite;
 }
 
-@keyframes luzFundo {
-    0% { transform: rotate(0deg); }
+@keyframes girarBg {
     100% { transform: rotate(360deg); }
 }
 
 /* PARTÍCULAS */
-.bg {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-}
-
 .bg span {
     position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
+    width: 3px;
+    height: 3px;
     background: white;
-    box-shadow: 0 0 10px white, 0 0 25px gold;
-    animation: brilho 8s linear infinite;
-    opacity: 0;
+    box-shadow: 0 0 10px gold;
+    animation: subir 8s linear infinite;
 }
 
-@keyframes brilho {
-    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+@keyframes subir {
+    0% { transform: translateY(100vh); opacity: 0; }
     20% { opacity: 1; }
-    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    100% { transform: translateY(-10vh); opacity: 0; }
 }
 
 /* CENTRAL */
 .wrapper {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     height: 100vh;
-    z-index: 1;
-    position: relative;
 }
 
 /* CARD */
 .container {
-    text-align: center;
-    background: rgba(17,17,17,0.85);
-    padding: 30px;
-    border-radius: 20px;
     width: 90%;
-    max-width: 350px;
-
-    backdrop-filter: blur(15px);
+    max-width: 360px;
+    padding: 25px;
+    border-radius: 20px;
+    background: rgba(20,20,20,0.8);
+    backdrop-filter: blur(20px);
     border: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
 
-    animation: entrada 1.5s ease forwards;
+    animation: entrar 1.5s ease;
 }
 
-@keyframes entrada {
+@keyframes entrar {
     from {
         opacity: 0;
-        transform: scale(0.8) translateY(80px);
-        filter: blur(20px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-        filter: blur(0);
+        transform: translateY(60px) scale(0.9);
+        filter: blur(15px);
     }
 }
+
+/* TABS */
+.tabs {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.tab.active {
+    border-color: gold;
+    color: gold;
+}
+
+/* CONTEÚDO */
+.content { display: none; }
+.content.active { display: block; }
 
 /* IMAGENS */
 .group-img {
     width: 100%;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    border: 1px solid #333;
-}
-
-/* TÍTULO LUXO */
-h2 {
-    font-size: 22px;
-    letter-spacing: 2px;
-    background: linear-gradient(90deg, gold, white, gold);
-    background-size: 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: brilhoTexto 4s linear infinite;
-}
-
-@keyframes brilhoTexto {
-    0% { background-position: 0%; }
-    100% { background-position: 200%; }
-}
-
-p {
-    color: #aaa;
-    font-size: 14px;
+    border-radius: 10px;
+    margin-bottom: 8px;
 }
 
 /* BOTÕES */
@@ -128,33 +143,29 @@ p {
     margin: 10px 0 20px;
     padding: 12px;
     border-radius: 12px;
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
     background: #111;
+    color: #fff;
+    text-decoration: none;
     position: relative;
     overflow: hidden;
-
-    box-shadow: 0 0 10px rgba(255,255,255,0.1);
     transition: 0.3s;
 }
 
-/* TEXTO INTERNO */
-.btn span {
-    position: relative;
-    z-index: 2;
+/* EFEITO 3D */
+.btn:hover {
+    transform: scale(1.05) translateY(-3px);
 }
 
 /* BRILHO PASSANDO */
 .btn::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: -100%;
     width: 60%;
     height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
-    transform: skewX(-25deg);
+    top: 0;
+    left: -100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+    transform: skewX(-20deg);
     transition: 0.5s;
 }
 
@@ -162,38 +173,19 @@ p {
     left: 120%;
 }
 
-/* BORDA NEON */
-.btn::after {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    border-radius: 14px;
-    animation: girar 4s linear infinite;
-    z-index: -1;
-}
-
-@keyframes girar {
-    100% { transform: rotate(360deg); }
-}
-
 /* VARIAÇÕES */
-.imperio::after {
-    background: conic-gradient(transparent, gold, #ffd700, gold, transparent);
+.imperio {
+    box-shadow: 0 0 10px gold;
 }
-
-.diamond::after {
-    background: conic-gradient(transparent, #fff, #ccc, #fff, transparent);
-}
-
-/* HOVER */
 .imperio:hover {
-    box-shadow: 0 0 25px gold, 0 0 50px rgba(255,215,0,0.5);
-    transform: scale(1.05);
+    box-shadow: 0 0 30px gold;
 }
 
+.diamond {
+    box-shadow: 0 0 10px white;
+}
 .diamond:hover {
-    box-shadow: 0 0 25px #fff, 0 0 50px rgba(255,255,255,0.4);
-    transform: scale(1.05);
+    box-shadow: 0 0 30px white;
 }
 
 /* PARCERIA */
@@ -201,64 +193,69 @@ p {
     border: 1px solid gold;
 }
 
-.parceria:hover {
-    box-shadow: 0 0 25px gold;
-}
-
 /* FOOTER */
 .footer {
     font-size: 12px;
     color: #777;
-    margin-top: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- FUNDO -->
-<div class="bg">
-    <span style="left:10%; animation-delay:0s;"></span>
-    <span style="left:20%; animation-delay:2s;"></span>
-    <span style="left:30%; animation-delay:4s;"></span>
-    <span style="left:40%; animation-delay:1s;"></span>
-    <span style="left:50%; animation-delay:3s;"></span>
-    <span style="left:60%; animation-delay:5s;"></span>
-    <span style="left:70%; animation-delay:2s;"></span>
-    <span style="left:80%; animation-delay:4s;"></span>
-    <span style="left:90%; animation-delay:1s;"></span>
+<div class="loader">
+    <h1>ENGAJA ELITE</h1>
 </div>
 
-<!-- CONTEÚDO -->
+<div class="bg">
+    <span style="left:10%"></span>
+    <span style="left:30%"></span>
+    <span style="left:60%"></span>
+    <span style="left:80%"></span>
+</div>
+
 <div class="wrapper">
 <div class="container">
 
     <h2>👑 ENGAJA ELITE</h2>
-    <p>Crescimento de alto nível</p>
 
-    <!-- GRUPO 1 -->
-    <img class="group-img" src="https://storageblack.cloud/midia/1777331201682.jpg">
-    <a class="btn imperio" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU?mode=gi_t">
-        <span>🔱 ENGAJA IMPÉRIO</span>
-    </a>
-
-    <!-- GRUPO 2 -->
-    <img class="group-img" src="https://storageblack.cloud/midia/1777330978711.jpg">
-    <a class="btn diamond" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4">
-        <span>💎 ENGAJA DIAMOND</span>
-    </a>
-
-    <!-- PARCERIA -->
-    <a class="btn parceria" href="https://wa.me/SEUNUMEROAQUI">
-        <span>🤝 Falar sobre parceria</span>
-    </a>
-
-    <div class="footer">
-        Exclusivo • Premium • Limitado
+    <div class="tabs">
+        <div class="tab active" onclick="trocar(0)">Grupos</div>
+        <div class="tab" onclick="trocar(1)">Parceria</div>
     </div>
 
+    <!-- GRUPOS -->
+    <div class="content active">
+        <img class="group-img" src="https://storageblack.cloud/midia/1777331201682.jpg">
+        <a class="btn imperio" href="#">🔱 ENGAJA IMPÉRIO</a>
+
+        <img class="group-img" src="https://storageblack.cloud/midia/1777330978711.jpg">
+        <a class="btn diamond" href="#">💎 ENGAJA DIAMOND</a>
+    </div>
+
+    <!-- PARCERIA -->
+    <div class="content">
+        <p>Quer crescer junto com a Elite?</p>
+        <a class="btn parceria" href="#">🤝 Falar comigo</a>
+    </div>
+
+    <div class="footer">Exclusivo • Premium • Limitado</div>
+
 </div>
 </div>
+
+<script>
+function trocar(i){
+    let tabs = document.querySelectorAll(".tab");
+    let content = document.querySelectorAll(".content");
+
+    tabs.forEach(t => t.classList.remove("active"));
+    content.forEach(c => c.classList.remove("active"));
+
+    tabs[i].classList.add("active");
+    content[i].classList.add("active");
+}
+</script>
 
 </body>
 </html>
