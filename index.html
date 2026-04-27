@@ -14,7 +14,23 @@ body {
     overflow: hidden;
 }
 
-/* FUNDO BRILHO LUXO */
+/* FUNDO AURA LUXO */
+body::before {
+    content: "";
+    position: fixed;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255,215,0,0.08), transparent 60%);
+    animation: luzFundo 12s linear infinite;
+    z-index: 0;
+}
+
+@keyframes luzFundo {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* PARTÍCULAS */
 .bg {
     position: fixed;
     width: 100%;
@@ -52,11 +68,14 @@ body {
 /* CARD */
 .container {
     text-align: center;
-    background: rgba(17,17,17,0.9);
+    background: rgba(17,17,17,0.85);
     padding: 30px;
     border-radius: 20px;
     width: 90%;
     max-width: 350px;
+
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.05);
 
     animation: entrada 1.5s ease forwards;
 }
@@ -64,8 +83,8 @@ body {
 @keyframes entrada {
     from {
         opacity: 0;
-        transform: scale(0.9) translateY(40px);
-        filter: blur(10px);
+        transform: scale(0.8) translateY(80px);
+        filter: blur(20px);
     }
     to {
         opacity: 1;
@@ -82,6 +101,27 @@ body {
     border: 1px solid #333;
 }
 
+/* TÍTULO LUXO */
+h2 {
+    font-size: 22px;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, gold, white, gold);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: brilhoTexto 4s linear infinite;
+}
+
+@keyframes brilhoTexto {
+    0% { background-position: 0%; }
+    100% { background-position: 200%; }
+}
+
+p {
+    color: #aaa;
+    font-size: 14px;
+}
+
 /* BOTÕES */
 .btn {
     display: block;
@@ -94,10 +134,36 @@ body {
     background: #111;
     position: relative;
     overflow: hidden;
+
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    transition: 0.3s;
 }
 
-/* NEON */
+/* TEXTO INTERNO */
+.btn span {
+    position: relative;
+    z-index: 2;
+}
+
+/* BRILHO PASSANDO */
 .btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: skewX(-25deg);
+    transition: 0.5s;
+}
+
+.btn:hover::before {
+    left: 120%;
+}
+
+/* BORDA NEON */
+.btn::after {
     content: "";
     position: absolute;
     inset: -2px;
@@ -106,41 +172,40 @@ body {
     z-index: -1;
 }
 
-.btn::after {
-    content: "";
-    position: absolute;
-    inset: 2px;
-    background: #111;
-    border-radius: 10px;
-    z-index: -1;
-}
-
 @keyframes girar {
     100% { transform: rotate(360deg); }
 }
 
-.imperio::before {
+/* VARIAÇÕES */
+.imperio::after {
     background: conic-gradient(transparent, gold, #ffd700, gold, transparent);
 }
 
-.diamond::before {
+.diamond::after {
     background: conic-gradient(transparent, #fff, #ccc, #fff, transparent);
 }
 
-/* BOTÃO PARCERIA */
+/* HOVER */
+.imperio:hover {
+    box-shadow: 0 0 25px gold, 0 0 50px rgba(255,215,0,0.5);
+    transform: scale(1.05);
+}
+
+.diamond:hover {
+    box-shadow: 0 0 25px #fff, 0 0 50px rgba(255,255,255,0.4);
+    transform: scale(1.05);
+}
+
+/* PARCERIA */
 .parceria {
-    background: linear-gradient(45deg, #111, #1c1c1c);
     border: 1px solid gold;
 }
 
 .parceria:hover {
-    box-shadow: 0 0 20px gold;
+    box-shadow: 0 0 25px gold;
 }
 
-/* TEXTO */
-h2 { margin-bottom: 5px; }
-p { color: #aaa; font-size: 14px; }
-
+/* FOOTER */
 .footer {
     font-size: 12px;
     color: #777;
@@ -172,20 +237,20 @@ p { color: #aaa; font-size: 14px; }
     <p>Crescimento de alto nível</p>
 
     <!-- GRUPO 1 -->
-    <img class="group-img" src="https://storageblack.cloud/midia/1777331201682.jpg" alt="Grupo Império">
+    <img class="group-img" src="https://storageblack.cloud/midia/1777331201682.jpg">
     <a class="btn imperio" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU?mode=gi_t">
-        🔱 ENGAJA IMPÉRIO
+        <span>🔱 ENGAJA IMPÉRIO</span>
     </a>
 
     <!-- GRUPO 2 -->
-    <img class="group-img" src="https://storageblack.cloud/midia/1777330978711.jpg" alt="Grupo Diamond">
+    <img class="group-img" src="https://storageblack.cloud/midia/1777330978711.jpg">
     <a class="btn diamond" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4">
-        💎 ENGAJA DIAMOND
+        <span>💎 ENGAJA DIAMOND</span>
     </a>
 
     <!-- PARCERIA -->
     <a class="btn parceria" href="https://wa.me/SEUNUMEROAQUI">
-        🤝 Falar sobre parceria
+        <span>🤝 Falar sobre parceria</span>
     </a>
 
     <div class="footer">
