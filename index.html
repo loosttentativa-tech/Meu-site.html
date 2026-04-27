@@ -10,43 +10,73 @@ body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: #0a0a0a;
-    overflow: hidden;
     color: #fff;
+    overflow: hidden;
 }
 
-/* FUNDO BRILHO */
-.sparkles span {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 10px white, 0 0 20px gold;
-    animation: subir 10s linear infinite;
-    opacity: 0;
-}
-@keyframes subir {
-    0% { transform: translateY(100vh); opacity: 0; }
-    20% { opacity: 1; }
-    100% { transform: translateY(-10vh); opacity: 0; }
+/* CENTRALIZAÇÃO TOTAL */
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
 }
 
-/* CONTAINER */
+/* LOADER */
+.loader {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    flex-direction: column;
+    animation: sumir 1s ease forwards;
+    animation-delay: 2.5s;
+}
+
+.loader h1 {
+    letter-spacing: 4px;
+    font-size: 18px;
+    animation: brilhoTexto 2s ease-in-out infinite;
+}
+
+@keyframes brilhoTexto {
+    0%,100% { opacity: 0.4; }
+    50% { opacity: 1; text-shadow: 0 0 10px gold; }
+}
+
+@keyframes sumir {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* CONTEÚDO */
 .container {
-    position: relative;
-    z-index: 1;
     text-align: center;
     background: rgba(17,17,17,0.9);
     padding: 40px;
     border-radius: 20px;
     max-width: 350px;
     width: 90%;
-    margin: auto;
-    top: 50%;
-    transform: translateY(-50%);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: aparecer 1s ease forwards;
+    animation-delay: 2.7s;
 }
 
-/* BOTÃO BASE */
+@keyframes aparecer {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* BOTÕES */
 .btn {
     position: relative;
     display: block;
@@ -56,10 +86,8 @@ body {
     text-decoration: none;
     color: #fff;
     font-weight: bold;
-    letter-spacing: 1px;
     background: #111;
     overflow: hidden;
-    z-index: 1;
 }
 
 /* BORDA NEON 360 */
@@ -68,7 +96,6 @@ body {
     position: absolute;
     inset: -2px;
     border-radius: 16px;
-    background: conic-gradient(from 0deg, transparent, white, transparent);
     animation: girar 4s linear infinite;
     z-index: -1;
 }
@@ -86,76 +113,55 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* IMPÉRIO (OURO) */
+/* IMPÉRIO */
 .imperio::before {
-    background: conic-gradient(
-        from 0deg,
-        transparent,
-        gold,
-        #ffd700,
-        gold,
-        transparent
-    );
+    background: conic-gradient(transparent, gold, #ffd700, gold, transparent);
 }
 
 .imperio:hover {
-    box-shadow: 0 0 25px gold, 0 0 50px rgba(255,215,0,0.5);
+    box-shadow: 0 0 25px gold;
     transform: scale(1.05);
 }
 
-/* DIAMOND (BRANCO/PRATA) */
+/* DIAMOND */
 .diamond::before {
-    background: conic-gradient(
-        from 0deg,
-        transparent,
-        #ffffff,
-        #cfcfcf,
-        #ffffff,
-        transparent
-    );
+    background: conic-gradient(transparent, #fff, #ccc, #fff, transparent);
 }
 
 .diamond:hover {
-    box-shadow: 0 0 25px #fff, 0 0 50px rgba(255,255,255,0.4);
+    box-shadow: 0 0 25px #fff;
     transform: scale(1.05);
 }
 
-/* TEXTO */
-h1 { letter-spacing: 2px; }
 p { color: #aaa; }
-
-.footer {
-    margin-top: 15px;
-    font-size: 12px;
-    color: #777;
-}
+.footer { font-size: 12px; color: #777; margin-top: 10px; }
 </style>
 </head>
 
 <body>
 
-<div class="sparkles">
-    <span style="left:10%; animation-delay:0s;"></span>
-    <span style="left:30%; animation-delay:2s;"></span>
-    <span style="left:50%; animation-delay:4s;"></span>
-    <span style="left:70%; animation-delay:1s;"></span>
-    <span style="left:90%; animation-delay:3s;"></span>
+<!-- LOADER -->
+<div class="loader">
+    <h1>ENGAJA ELITE</h1>
 </div>
 
-<div class="container">
-    <h1>👑 ENGAJA ELITE</h1>
-    <p>Acesso ao crescimento de alto nível</p>
+<!-- CONTEÚDO -->
+<div class="wrapper">
+    <div class="container">
+        <h2>👑 ENGAJA ELITE</h2>
+        <p>Acesso ao crescimento de alto nível</p>
 
-    <a class="btn imperio" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU?mode=gi_t" target="_blank">
-        🔱 ENGAJA IMPÉRIO
-    </a>
+        <a class="btn imperio" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU?mode=gi_t" target="_blank">
+            🔱 ENGAJA IMPÉRIO
+        </a>
 
-    <a class="btn diamond" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4" target="_blank">
-        💎 ENGAJA DIAMOND
-    </a>
+        <a class="btn diamond" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4" target="_blank">
+            💎 ENGAJA DIAMOND
+        </a>
 
-    <div class="footer">
-        Exclusivo • Premium • Limitado
+        <div class="footer">
+            Exclusivo • Premium • Limitado
+        </div>
     </div>
 </div>
 
