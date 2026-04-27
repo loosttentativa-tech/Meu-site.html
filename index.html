@@ -14,39 +14,29 @@
         color: #fff;
     }
 
-    /* FUNDO COM BRILHOS */
+    /* FUNDO BRILHOS */
     .sparkles {
         position: fixed;
         width: 100%;
         height: 100%;
-        overflow: hidden;
         z-index: 0;
     }
 
     .sparkles span {
         position: absolute;
-        display: block;
         width: 3px;
         height: 3px;
         background: white;
         border-radius: 50%;
         box-shadow: 0 0 10px white, 0 0 20px gold;
-        animation: animate 10s linear infinite;
+        animation: subir 10s linear infinite;
         opacity: 0;
     }
 
-    @keyframes animate {
-        0% {
-            transform: translateY(100vh) scale(0);
-            opacity: 0;
-        }
-        20% {
-            opacity: 1;
-        }
-        100% {
-            transform: translateY(-10vh) scale(1);
-            opacity: 0;
-        }
+    @keyframes subir {
+        0% { transform: translateY(100vh) scale(0); opacity: 0; }
+        20% { opacity: 1; }
+        100% { transform: translateY(-10vh) scale(1); opacity: 0; }
     }
 
     /* CONTAINER */
@@ -57,7 +47,6 @@
         background: rgba(17,17,17,0.9);
         padding: 40px;
         border-radius: 20px;
-        box-shadow: 0 0 40px rgba(0,0,0,0.8);
         max-width: 350px;
         width: 90%;
         margin: auto;
@@ -65,37 +54,54 @@
         transform: translateY(-50%);
     }
 
-    h1 {
-        letter-spacing: 2px;
-    }
+    h1 { letter-spacing: 2px; }
 
-    p {
-        color: #aaa;
-        margin-bottom: 25px;
-    }
+    p { color: #aaa; }
 
+    /* BOTÕES */
     .btn {
+        position: relative;
         display: block;
-        text-decoration: none;
         padding: 15px;
-        margin: 10px 0;
-        border-radius: 10px;
-        font-weight: bold;
-        transition: 0.3s;
+        margin: 12px 0;
+        border-radius: 12px;
+        text-decoration: none;
         color: #fff;
+        font-weight: bold;
+        letter-spacing: 1px;
+        overflow: hidden;
+        transition: 0.3s;
+        background: #111;
+        border: 1px solid #333;
     }
 
-    .imperio {
-        border: 1px solid gold;
+    /* GLOW ANIMADO */
+    .btn::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,0.2),
+            rgba(255,215,0,0.4),
+            transparent
+        );
+        transform: rotate(25deg);
+        animation: brilho 4s linear infinite;
     }
 
-    .diamond {
-        border: 1px solid #ccc;
+    @keyframes brilho {
+        0% { transform: translateX(-100%) rotate(25deg); }
+        100% { transform: translateX(100%) rotate(25deg); }
     }
 
     .btn:hover {
         transform: scale(1.05);
-        box-shadow: 0 0 15px gold;
+        box-shadow: 0 0 20px gold;
     }
 
     .footer {
@@ -109,7 +115,6 @@
 <body>
 
 <div class="sparkles">
-    <!-- GERAR VÁRIOS BRILHOS -->
     <span style="left:10%; animation-delay:0s;"></span>
     <span style="left:20%; animation-delay:2s;"></span>
     <span style="left:30%; animation-delay:4s;"></span>
@@ -125,11 +130,11 @@
     <h1>👑 ENGAJA ELITE</h1>
     <p>Acesso ao crescimento de alto nível</p>
 
-    <a class="btn imperio" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU?mode=gi_t" target="_blank">
+    <a class="btn" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU?mode=gi_t" target="_blank">
         🔱 ENGAJA IMPÉRIO
     </a>
 
-    <a class="btn diamond" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4" target="_blank">
+    <a class="btn" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4" target="_blank">
         💎 ENGAJA DIAMOND
     </a>
 
