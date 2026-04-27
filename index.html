@@ -11,7 +11,7 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background: #050505;
     color: #fff;
-    overflow: hidden;
+    overflow-x: hidden; /* CORRIGIDO */
 }
 
 /* LOADER */
@@ -82,7 +82,7 @@ body::before {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh; /* MELHORADO */
 }
 
 /* CARD */
@@ -95,7 +95,6 @@ body::before {
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255,255,255,0.05);
     text-align: center;
-
     animation: entrar 1.5s ease;
 }
 
@@ -130,12 +129,14 @@ body::before {
 .content { display: none; }
 .content.active { display: block; }
 
-<!-- IMAGENS -->
+/* IMAGENS (CORRIGIDO) */
 .group-img {
     width: 100%;
-    border-radius: 50%; /* ALTERADO */
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
     margin-bottom: 8px;
-    }
+}
 
 /* BOTÕES */
 .btn {
@@ -227,21 +228,21 @@ body::before {
     <!-- GRUPOS -->
     <div class="content active">
         <img class="group-img" src="https://storageblack.cloud/midia/1777331201682.jpg">
-        <a class="btn imperio" href="#">🔱 ENGAJA IMPÉRIO</a>
+        <a class="btn imperio" href="#" target="_blank">🔱 ENGAJA IMPÉRIO</a>
 
         <img class="group-img" src="https://storageblack.cloud/midia/1777330978711.jpg">
-        <a class="btn diamond" href="#">💎 ENGAJA DIAMOND</a>
+        <a class="btn diamond" href="#" target="_blank">💎 ENGAJA DIAMOND</a>
     </div>
 
-<!-- PARCERIA -->
-<div class="content">
-    <p>Quer crescer junto com a Elite?</p>
-    <a class="btn parceria" href="https://wa.me/557588379574" target="_blank">
-        🤝 Falar comigo
-    </a>
-</div>
+    <!-- PARCERIA -->
+    <div class="content">
+        <p>Quer crescer junto com a Elite?</p>
+        <a class="btn parceria" href="https://wa.me/557588379574" target="_blank">
+            🤝 Falar comigo
+        </a>
+    </div>
 
-    <div class="footer">by: ẉa.me/marcos '                    </>                    </div>
+    <div class="footer">by: wa.me/marcos</div>
 
 </div>
 </div>
