@@ -1,98 +1,96 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recado</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engaja Elite</title>
 
-        body {
-            background-color: #000;
-            color: white;
-            font-family: 'Arial', sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden; /* Impede scroll por causa dos emojis */
-            position: relative;
-        }
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: #0a0a0a;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
 
-        /* Estilo da Frase Central */
-        h1 {
-            font-size: 4rem;
-            text-align: center;
-            z-index: 10; /* Garante que a frase fique na frente */
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 15px;
-        }
+    .container {
+        text-align: center;
+        background: #111;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        max-width: 350px;
+        width: 90%;
+    }
 
-        /* Container dos Emojis */
-        .background-emojis {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
+    h1 {
+        font-size: 22px;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+    }
 
-        .emoji {
-            position: absolute;
-            font-size: 2rem;
-            user-select: none;
-            animation: move linear infinite;
-        }
+    p {
+        font-size: 14px;
+        color: #aaa;
+        margin-bottom: 30px;
+    }
 
-        /* Animação de movimento */
-        @keyframes move {
-            from {
-                transform: translateY(110vh) rotate(0deg);
-            }
-            to {
-                transform: translateY(-10vh) rotate(360deg);
-            }
-        }
-    </style>
+    .btn {
+        display: block;
+        text-decoration: none;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 10px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        transition: 0.3s;
+    }
+
+    .imperio {
+        background: linear-gradient(45deg, #1a1a1a, #333);
+        border: 1px solid #555;
+    }
+
+    .diamond {
+        background: linear-gradient(45deg, #0f0f0f, #1f1f1f);
+        border: 1px solid #777;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(255,255,255,0.2);
+    }
+
+    .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #666;
+    }
+</style>
 </head>
+
 <body>
 
-    <div class="background-emojis" id="emoji-container"></div>
+<div class="container">
+    <h1>👑 ENGAJA ELITE</h1>
+    <p>Acesso restrito ao crescimento de alto nível</p>
 
-    <h1>vsfdr Ester</h1>
+    <a class="btn imperio" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU?mode=gi_t" target="_blank">
+        🔱 ENGAJA IMPÉRIO
+    </a>
 
-    <script>
-        const container = document.getElementById('emoji-container');
-        const emojiCount = 50; // Quantidade de emojis na tela
+    <a class="btn diamond" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4" target="_blank">
+        💎 ENGAJA DIAMOND
+    </a>
 
-        for (let i = 0; i < emojiCount; i++) {
-            const emoji = document.createElement('div');
-            emoji.classList.add('emoji');
-            emoji.innerText = '🖕';
-            
-            // Posição horizontal aleatória
-            emoji.style.left = Math.random() * 100 + 'vw';
-            
-            // Velocidade e delay aleatórios para não subirem todos juntos
-            const duration = (Math.random() * 5 + 3) + 's';
-            const delay = (Math.random() * 5) + 's';
-            
-            emoji.style.animationDuration = duration;
-            emoji.style.animationDelay = delay;
-            
-            // Tamanho aleatório para dar profundidade
-            emoji.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
-            emoji.style.opacity = Math.random() * 0.7 + 0.3;
+    <div class="footer">
+        Exclusivo • Premium • Limitado
+    </div>
+</div>
 
-            container.appendChild(emoji);
-        }
-    </script>
 </body>
 </html>
