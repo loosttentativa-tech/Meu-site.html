@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENGAJA ELITE</title>
 
-<link rel="icon" type="image/jpg" href="https://storageblack.cloud/midia/1773117490092.jpg">
-    
+<link rel="icon" href="https://storageblack.cloud/midia/1773117490092.jpg">
 
 <style>
 body {
@@ -15,10 +13,10 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background: #050505;
     color: #fff;
-    overflow-x: hidden; /* CORRIGIDO */
+    overflow-x: hidden;
 }
 
-/* LOADER */
+/* LOADER PREMIUM */
 .loader {
     position: fixed;
     width: 100%;
@@ -28,12 +26,11 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 999;
-    animation: sumir 2.5s forwards;
 }
 
 .loader h1 {
-    font-size: 28px;
-    letter-spacing: 3px;
+    font-size: 30px;
+    letter-spacing: 4px;
     background: linear-gradient(90deg, gold, white, gold);
     background-size: 200%;
     -webkit-background-clip: text;
@@ -46,19 +43,15 @@ body {
     100% { background-position: 200%; }
 }
 
-@keyframes sumir {
-    80% { opacity: 1; }
-    100% { opacity: 0; visibility: hidden; }
-}
-
-/* FUNDO */
+/* FUNDO SUAVE */
 body::before {
     content: "";
     position: fixed;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,215,0,0.08), transparent 60%);
-    animation: girarBg 15s linear infinite;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(255,215,0,0.05), transparent 60%);
+    animation: girarBg 25s linear infinite;
+    z-index: -1;
 }
 
 @keyframes girarBg {
@@ -71,8 +64,9 @@ body::before {
     width: 3px;
     height: 3px;
     background: white;
+    border-radius: 50%;
     box-shadow: 0 0 10px gold;
-    animation: subir 8s linear infinite;
+    animation: subir linear infinite;
 }
 
 @keyframes subir {
@@ -86,7 +80,7 @@ body::before {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* MELHORADO */
+    min-height: 100vh;
 }
 
 /* CARD */
@@ -99,14 +93,14 @@ body::before {
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255,255,255,0.05);
     text-align: center;
-    animation: entrar 1.5s ease;
+    animation: entrar 1.2s ease;
 }
 
 @keyframes entrar {
     from {
         opacity: 0;
-        transform: translateY(60px) scale(0.9);
-        filter: blur(15px);
+        transform: translateY(80px) scale(0.9);
+        filter: blur(10px);
     }
 }
 
@@ -129,36 +123,53 @@ body::before {
     color: gold;
 }
 
-/* CONTEÚDO */
-.content { display: none; }
-.content.active { display: block; }
-
-/* IMAGENS (CORRIGIDO) */
-.group-img {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 8px;
+/* CONTEÚDO COM ANIMAÇÃO */
+.content {
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.4s;
 }
 
-/* BOTÕES */
-.btn {
+.content.active {
     display: block;
-    margin: 10px 0 20px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* IMAGEM */
+.group-img {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin: 10px auto;
+    display: block;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+/* BOTÕES BASE */
+.btn {
+    position: relative;
+    display: block;
+    margin: 12px 0 20px;
     padding: 12px;
     border-radius: 12px;
     background: #111;
     color: #fff;
     text-decoration: none;
-    position: relative;
     overflow: hidden;
     transition: 0.3s;
 }
 
-/* EFEITO 3D */
+/* HOVER 3D */
 .btn:hover {
-    transform: scale(1.05) translateY(-3px);
+    transform: scale(1.06) translateY(-3px);
+}
+
+/* CLICK */
+.btn:active {
+    transform: scale(0.95);
 }
 
 /* BRILHO PASSANDO */
@@ -169,28 +180,37 @@ body::before {
     height: 100%;
     top: 0;
     left: -100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
     transform: skewX(-20deg);
-    transition: 0.5s;
 }
 
 .btn:hover::before {
-    left: 120%;
+    animation: brilhoBtn 0.8s forwards;
 }
 
-/* VARIAÇÕES */
+@keyframes brilhoBtn {
+    to { left: 120%; }
+}
+
+/* GLOW ANIMADO */
 .imperio {
     box-shadow: 0 0 10px gold;
+    animation: glowGold 2s infinite alternate;
 }
-.imperio:hover {
-    box-shadow: 0 0 30px gold;
+
+@keyframes glowGold {
+    from { box-shadow: 0 0 10px gold; }
+    to { box-shadow: 0 0 25px gold; }
 }
 
 .diamond {
     box-shadow: 0 0 10px white;
+    animation: glowWhite 2s infinite alternate;
 }
-.diamond:hover {
-    box-shadow: 0 0 30px white;
+
+@keyframes glowWhite {
+    from { box-shadow: 0 0 10px white; }
+    to { box-shadow: 0 0 25px white; }
 }
 
 /* PARCERIA */
@@ -212,46 +232,59 @@ body::before {
     <h1>ENGAJA ELITE</h1>
 </div>
 
-<div class="bg">
-    <span style="left:10%"></span>
-    <span style="left:30%"></span>
-    <span style="left:60%"></span>
-    <span style="left:80%"></span>
-</div>
+<div class="bg"></div>
 
 <div class="wrapper">
 <div class="container">
 
-    <h2>👑 ENGAJA ELITE</h2>
+<h2>👑 ENGAJA ELITE</h2>
 
-    <div class="tabs">
-        <div class="tab active" onclick="trocar(0)">Grupos</div>
-        <div class="tab" onclick="trocar(1)">Parceria</div>
-    </div>
+<div class="tabs">
+    <div class="tab active" onclick="trocar(0)">Grupos</div>
+    <div class="tab" onclick="trocar(1)">Parceria</div>
+</div>
 
-    <!-- GRUPOS -->
-    <div class="content active">
-        <img class="group-img" src="https://storageblack.cloud/midia/1777331201682.jpg">
-        <a class="btn imperio" href="#" target="_blank">🔱 ENGAJA IMPÉRIO</a>
+<div class="content active">
+    <img class="group-img" src="https://storageblack.cloud/midia/1777331201682.jpg">
+    <a class="btn imperio" href="#" target="_blank">🔱 ENGAJA IMPÉRIO</a>
 
-        <img class="group-img" src="https://storageblack.cloud/midia/1777330978711.jpg">
-        <a class="btn diamond" href="#" target="_blank">💎 ENGAJA DIAMOND</a>
-    </div>
+    <img class="group-img" src="https://storageblack.cloud/midia/1777330978711.jpg">
+    <a class="btn diamond" href="#" target="_blank">💎 ENGAJA DIAMOND</a>
+</div>
 
-    <!-- PARCERIA -->
-    <div class="content">
-        <p>Quer crescer junto com a Elite?</p>
-        <a class="btn parceria" href="https://wa.me/557588379574" target="_blank">
-            🤝 Falar comigo
-        </a>
-    </div>
+<div class="content">
+    <p>Quer crescer junto com a Elite?</p>
+    <a class="btn parceria" href="https://wa.me/557588379574" target="_blank">
+        🤝 Falar comigo
+    </a>
+</div>
 
-    <div class="footer">by: wa.me/marcos</div>
+<div class="footer">by: wa.me/marcos</div>
 
 </div>
 </div>
 
 <script>
+/* REMOVER LOADER */
+setTimeout(() => {
+    document.querySelector(".loader").style.opacity = "0";
+    setTimeout(() => {
+        document.querySelector(".loader").remove();
+    }, 500);
+}, 2000);
+
+/* PARTÍCULAS DINÂMICAS */
+const bg = document.querySelector(".bg");
+
+for(let i=0;i<25;i++){
+    let span = document.createElement("span");
+    span.style.left = Math.random()*100+"%";
+    span.style.animationDuration = (5 + Math.random()*5)+"s";
+    span.style.opacity = Math.random();
+    bg.appendChild(span);
+}
+
+/* TROCAR ABA */
 function trocar(i){
     let tabs = document.querySelectorAll(".tab");
     let content = document.querySelectorAll(".content");
@@ -262,7 +295,33 @@ function trocar(i){
     tabs[i].classList.add("active");
     content[i].classList.add("active");
 }
+
+/* RIPPLE EFFECT */
+document.querySelectorAll(".btn").forEach(btn => {
+    btn.addEventListener("click", function(e){
+        let ripple = document.createElement("span");
+        ripple.style.position = "absolute";
+        ripple.style.width = ripple.style.height = "100px";
+        ripple.style.background = "rgba(255,255,255,0.3)";
+        ripple.style.borderRadius = "50%";
+        ripple.style.left = e.offsetX - 50 + "px";
+        ripple.style.top = e.offsetY - 50 + "px";
+        ripple.style.animation = "ripple 0.6s linear";
+        this.appendChild(ripple);
+
+        setTimeout(()=> ripple.remove(),600);
+    });
+});
+
+/* ANIMAÇÃO RIPPLE */
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes ripple {
+    from { transform: scale(0); opacity: 1; }
+    to { transform: scale(3); opacity: 0; }
+}`;
+document.head.appendChild(style);
 </script>
 
 </body>
-</html>
+                                        </html>
