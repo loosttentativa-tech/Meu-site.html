@@ -16,7 +16,7 @@ body {
     overflow-x: hidden;
 }
 
-/* LOADER PREMIUM */
+/* LOADER */
 .loader {
     position: fixed;
     width: 100%;
@@ -43,7 +43,7 @@ body {
     100% { background-position: 200%; }
 }
 
-/* FUNDO SUAVE */
+/* FUNDO */
 body::before {
     content: "";
     position: fixed;
@@ -123,7 +123,7 @@ body::before {
     color: gold;
 }
 
-/* CONTEÚDO COM ANIMAÇÃO */
+/* CONTEÚDO */
 .content {
     display: none;
     opacity: 0;
@@ -145,14 +145,13 @@ body::before {
     border-radius: 50%;
     margin: 10px auto;
     display: block;
-    box-shadow: 0 0 20px rgba(255,255,255,0.1);
 }
 
-/* BOTÕES BASE */
+/* BOTÕES */
 .btn {
     position: relative;
     display: block;
-    margin: 12px 0 20px;
+    margin: 12px 0 10px;
     padding: 12px;
     border-radius: 12px;
     background: #111;
@@ -162,60 +161,59 @@ body::before {
     transition: 0.3s;
 }
 
-/* HOVER 3D */
 .btn:hover {
-    transform: scale(1.06) translateY(-3px);
+    transform: scale(1.06);
 }
 
-/* CLICK */
 .btn:active {
     transform: scale(0.95);
 }
 
-/* BRILHO PASSANDO */
-.btn::before {
-    content: "";
-    position: absolute;
-    width: 60%;
-    height: 100%;
-    top: 0;
-    left: -100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
-    transform: skewX(-20deg);
-}
-
-.btn:hover::before {
-    animation: brilhoBtn 0.8s forwards;
-}
-
-@keyframes brilhoBtn {
-    to { left: 120%; }
-}
-
-/* GLOW ANIMADO */
+/* GLOW */
 .imperio {
     box-shadow: 0 0 10px gold;
-    animation: glowGold 2s infinite alternate;
-}
-
-@keyframes glowGold {
-    from { box-shadow: 0 0 10px gold; }
-    to { box-shadow: 0 0 25px gold; }
 }
 
 .diamond {
     box-shadow: 0 0 10px white;
-    animation: glowWhite 2s infinite alternate;
 }
 
-@keyframes glowWhite {
-    from { box-shadow: 0 0 10px white; }
-    to { box-shadow: 0 0 25px white; }
+/* INFO GRUPO */
+.grupo-info {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: 0.4s;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    padding: 0 10px;
+    margin-bottom: 10px;
 }
 
-/* PARCERIA */
-.parceria {
-    border: 1px solid gold;
+.grupo-info.active {
+    max-height: 300px;
+    opacity: 1;
+    padding: 10px;
+}
+
+/* STATUS */
+.status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.status.on {
+    background: #00ff88;
+    box-shadow: 0 0 8px #00ff88;
+}
+
+/* BOTÃO ENTRAR */
+.entrar {
+    background: linear-gradient(45deg, gold, #222);
+    font-weight: bold;
 }
 
 /* FOOTER */
@@ -244,14 +242,43 @@ body::before {
     <div class="tab" onclick="trocar(1)">Parceria</div>
 </div>
 
+<!-- GRUPOS -->
 <div class="content active">
-    <img class="group-img" src="https://storageblack.cloud/midia/1777331201682.jpg">
-    <a class="btn imperio" href="#" target="_blank">🔱 ENGAJA IMPÉRIO</a>
 
+    <!-- DIAMOND -->
     <img class="group-img" src="https://storageblack.cloud/midia/1777330978711.jpg">
-    <a class="btn diamond" href="#" target="_blank">💎 ENGAJA DIAMOND</a>
+    <a class="btn diamond" onclick="toggleGrupo('diamond')">💎 ENGAJA DIAMOND</a>
+
+    <div id="diamond" class="grupo-info">
+        <p><b>Grupo:</b> Engaja Diamond</p>
+        <p><b>Nome:</b> ⊹ ࣪ ˖ 𖦹 ‧💎𝐄𝐍𝐆𝐀𝐉𝐀 𝐃𝐈𝐀𝐌𝐎𝐍𝐃💎 ² 𖦹 ‧ ˖ ࣪⊹</p>
+        <p><b>Membros:</b> 180+</p>
+        <p><span class="status on"></span> Grupo ativo</p>
+        <p><span class="status on"></span> Bot ativo</p>
+
+        <a class="btn entrar" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4" target="_blank">
+            🚀 ENTRAR AGORA
+        </a>
+    </div>
+
+    <!-- IMPÉRIO -->
+    <img class="group-img" src="https://storageblack.cloud/midia/1777331201682.jpg">
+    <a class="btn imperio" onclick="toggleGrupo('imperio')">🔱 ENGAJA IMPÉRIO</a>
+
+    <div id="imperio" class="grupo-info">
+        <p><b>Grupo:</b> Engaja Império</p>
+        <p><b>Membros:</b> 250+</p>
+        <p><span class="status on"></span> Grupo ativo</p>
+        <p><span class="status on"></span> Bot ativo</p>
+
+        <a class="btn entrar" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU" target="_blank">
+            🚀 ENTRAR AGORA
+        </a>
+    </div>
+
 </div>
 
+<!-- PARCERIA -->
 <div class="content">
     <p>Quer crescer junto com a Elite?</p>
     <a class="btn parceria" href="https://wa.me/557588379574" target="_blank">
@@ -265,26 +292,23 @@ body::before {
 </div>
 
 <script>
-/* REMOVER LOADER */
+
+/* LOADER */
 setTimeout(() => {
     document.querySelector(".loader").style.opacity = "0";
-    setTimeout(() => {
-        document.querySelector(".loader").remove();
-    }, 500);
+    setTimeout(() => document.querySelector(".loader").remove(), 500);
 }, 2000);
 
-/* PARTÍCULAS DINÂMICAS */
+/* PARTÍCULAS */
 const bg = document.querySelector(".bg");
-
 for(let i=0;i<25;i++){
     let span = document.createElement("span");
     span.style.left = Math.random()*100+"%";
     span.style.animationDuration = (5 + Math.random()*5)+"s";
-    span.style.opacity = Math.random();
     bg.appendChild(span);
 }
 
-/* TROCAR ABA */
+/* TABS */
 function trocar(i){
     let tabs = document.querySelectorAll(".tab");
     let content = document.querySelectorAll(".content");
@@ -296,32 +320,19 @@ function trocar(i){
     content[i].classList.add("active");
 }
 
-/* RIPPLE EFFECT */
-document.querySelectorAll(".btn").forEach(btn => {
-    btn.addEventListener("click", function(e){
-        let ripple = document.createElement("span");
-        ripple.style.position = "absolute";
-        ripple.style.width = ripple.style.height = "100px";
-        ripple.style.background = "rgba(255,255,255,0.3)";
-        ripple.style.borderRadius = "50%";
-        ripple.style.left = e.offsetX - 50 + "px";
-        ripple.style.top = e.offsetY - 50 + "px";
-        ripple.style.animation = "ripple 0.6s linear";
-        this.appendChild(ripple);
+/* ABRIR GRUPO */
+function toggleGrupo(id){
+    let el = document.getElementById(id);
 
-        setTimeout(()=> ripple.remove(),600);
-    });
-});
+    if(el.classList.contains("active")){
+        el.classList.remove("active");
+    } else {
+        document.querySelectorAll(".grupo-info").forEach(g => g.classList.remove("active"));
+        el.classList.add("active");
+    }
+}
 
-/* ANIMAÇÃO RIPPLE */
-const style = document.createElement('style');
-style.innerHTML = `
-@keyframes ripple {
-    from { transform: scale(0); opacity: 1; }
-    to { transform: scale(3); opacity: 0; }
-}`;
-document.head.appendChild(style);
 </script>
 
 </body>
-                                        </html>
+    </html>
