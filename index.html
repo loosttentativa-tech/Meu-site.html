@@ -82,25 +82,25 @@ button{
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
 import { 
   getAuth, 
   signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword 
+  createUserWithEmailAndPassword,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 import { 
-  getFirestore, collection, addDoc, getDocs, deleteDoc, doc 
+  getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA18Evh4E-BCu2P7ipJE7wmRWrtcpcuL4c",
   authDomain: "website-e6c83.firebaseapp.com",
-  databaseURL: "https://website-e6c83-default-rtdb.firebaseio.com",
   projectId: "website-e6c83",
   storageBucket: "website-e6c83.firebasestorage.app",
   messagingSenderId: "1005197181047",
-  appId: "1:1005197181047:web:6e3821ed4658d068524672",
-  measurementId: "G-TWE1M8NKZ9"
+  appId: "1:1005197181047:web:6e3821ed4658d068524672"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -109,64 +109,44 @@ const db = getFirestore(app);
 
 let user = null;
 
+// 🔁 MANTER LOGIN
+onAuthStateChanged(auth, (u) => {
+  if(u){
+    user = u;
+    carregar();
+  } else {
+    user = null;
+    lista.innerHTML = "<p>Faça login para ver os grupos</p>";
+  }
+});
+
 // 🔐 REGISTRAR
 window.registrar = async () => {
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
+  const email = emailInput.value;
+  const senha = senhaInput.value;
 
   try {
     const res = await createUserWithEmailAndPassword(auth, email, senha);
     user = res.user;
-
-    alert("Conta criada com sucesso!");
-    carregar();
-
+    alert("Conta criada!");
   } catch (error) {
-
-    if (error.code === "auth/email-already-in-use") {
-      alert("Esse email já está cadastrado.");
-    } 
-    else if (error.code === "auth/invalid-email") {
-      alert("Email inválido.");
-    } 
-    else if (error.code === "auth/weak-password") {
-      alert("Senha muito fraca (mínimo 6 caracteres).");
-    } 
-    else {
-      alert("Erro ao registrar.");
-      console.error(error);
-    }
+    alert(error.code);
+    console.log(error);
   }
 };
 
 // 🔓 LOGIN
 window.login = async () => {
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
+  const email = emailInput.value;
+  const senha = senhaInput.value;
 
   try {
     const res = await signInWithEmailAndPassword(auth, email, senha);
     user = res.user;
-
     alert("Logado!");
-    carregar();
-
   } catch (error) {
-
-    if (error.code === "auth/user-not-found") {
-      alert("Usuário não encontrado.");
-    } 
-    else if (error.code === "auth/wrong-password") {
-      alert("Senha incorreta.");
-    } 
-    else if (error.code === "auth/invalid-email") {
-      alert("Email inválido.");
-    } 
-    else {
-      alert(error.code);
-console.log(error);
-      console.error(error);
-    }
+    alert(error.code);
+    console.log(error);
   }
 };
 
@@ -179,48 +159,48 @@ window.addGrupo = async () => {
   }
 
   await addDoc(collection(db, "grupos"), {
-    nome: document.getElementById("nome").value,
-    foto: document.getElementById("foto").value,
-    membros: Number(document.getElementById("membros").value),
-    status: document.getElementById("status").value,
+    nome: nome.value,
+    foto: foto.value,
+    membros: Number(membros.value),
+    status: status.value,
     owner: user.uid
   });
-
-  carregar();
 };
 
-// 📦 LISTAR
-async function carregar(){
-  lista.innerHTML = "";
+// 📦 LISTAR (TEMPO REAL)
+function carregar(){
 
-  const query = await getDocs(collection(db, "grupos"));
+  onSnapshot(collection(db, "grupos"), (snapshot) => {
 
-  query.forEach(docu=>{
-    const g = docu.data();
+    lista.innerHTML = "";
 
-    const div = document.createElement("div");
-    div.className = "card";
+    snapshot.forEach(docu=>{
+      const g = docu.data();
 
-    div.innerHTML = `
-      <img src="${g.foto}">
-      <div>
-        <b>${g.nome}</b><br>
-        ${g.membros} membros<br>
-        <div class="status ${g.status}"></div>
-      </div>
-    `;
+      const div = document.createElement("div");
+      div.className = "card";
 
-    if(user && user.uid === g.owner){
-      const btn = document.createElement("button");
-      btn.innerText = "Remover";
-      btn.onclick = async ()=>{
-        await deleteDoc(doc(db,"grupos",docu.id));
-        carregar();
-      };
-      div.appendChild(btn);
-    }
+      div.innerHTML = `
+        <img src="${g.foto}">
+        <div>
+          <b>${g.nome}</b><br>
+          ${g.membros} membros<br>
+          <div class="status ${g.status}"></div>
+        </div>
+      `;
 
-    lista.appendChild(div);
+      if(user && user.uid === g.owner){
+        const btn = document.createElement("button");
+        btn.innerText = "Remover";
+        btn.onclick = async ()=>{
+          await deleteDoc(doc(db,"grupos",docu.id));
+        };
+        div.appendChild(btn);
+      }
+
+      lista.appendChild(div);
+    });
+
   });
 }
 
