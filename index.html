@@ -16,10 +16,8 @@
   --muted:#777;
 }
 
-/* RESET */
 *{box-sizing:border-box;margin:0;padding:0}
 
-/* FUNDO */
 body{
   font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;
   background: radial-gradient(circle at top, #1a1a1a 0%, #050505 70%);
@@ -27,7 +25,6 @@ body{
   overflow-x:hidden;
 }
 
-/* BRILHO */
 body::before{
   content:"";
   position:fixed;
@@ -48,7 +45,6 @@ body::before{
   padding:20px;
 }
 
-/* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
@@ -64,7 +60,6 @@ body::before{
   -webkit-text-fill-color:transparent;
 }
 
-/* BOTÃO */
 .btn{
   background:linear-gradient(135deg,#fff,#bfbfbf);
   color:#000;
@@ -82,7 +77,6 @@ body::before{
   box-shadow:0 0 25px rgba(255,255,255,0.4);
 }
 
-/* CARD */
 .card{
   background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(0,0,0,0.7));
   border-radius:20px;
@@ -92,14 +86,13 @@ body::before{
   border:1px solid rgba(255,255,255,0.06);
 }
 
-/* GRID */
 .grid-public{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
   gap:20px;
 }
 
-/* CARD PÚBLICO */
+/* CARD */
 .public-card{
   background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(0,0,0,0.7));
   border-radius:20px;
@@ -112,7 +105,6 @@ body::before{
 
   opacity:0;
   transform:translateY(20px);
-  animation:fadeUp .6s ease forwards;
 }
 
 @keyframes fadeUp{
@@ -122,7 +114,7 @@ body::before{
   }
 }
 
-/* BORDA ANIMADA */
+/* BORDA */
 .public-card::before{
   content:"";
   position:absolute;
@@ -147,7 +139,6 @@ body::before{
   transform:translateY(-8px) scale(1.02);
 }
 
-/* IMAGEM */
 .public-card img{
   width:80px;
   height:80px;
@@ -157,13 +148,11 @@ body::before{
   box-shadow:0 0 15px rgba(255,255,255,0.2);
 }
 
-/* TITULO */
 .public-card h3{
   font-size:16px;
   margin:8px 0;
 }
 
-/* STATUS */
 .status{
   display:flex;
   align-items:center;
@@ -194,14 +183,12 @@ body::before{
   100%{box-shadow:0 0 0 0 transparent}
 }
 
-/* DESCRIÇÃO */
 .public-card p{
   font-size:13px;
   color:var(--muted);
   margin:8px 0;
 }
 
-/* BOTÃO CARD */
 .public-card a{
   display:inline-block;
   margin-top:10px;
@@ -218,7 +205,6 @@ body::before{
   transform:scale(1.08);
 }
 
-/* FORM */
 input,select,textarea{
   width:100%;
   padding:10px;
@@ -229,7 +215,6 @@ input,select,textarea{
   margin-bottom:10px;
 }
 
-/* LISTA ADM */
 .group-item{
   display:flex;
   gap:12px;
@@ -248,7 +233,6 @@ input,select,textarea{
   border-radius:50%;
 }
 
-/* TOAST */
 .toast{
   position:fixed;
   bottom:20px;
@@ -313,7 +297,6 @@ input,select,textarea{
 
 </div>
 
-<!-- LISTA -->
 <div class="card">
   <div style="font-weight:600;margin-bottom:10px;">Grupos</div>
   <div id="all-groups" class="grid-public"></div>
@@ -357,11 +340,13 @@ function render(){
   $("#list").innerHTML="";
   $("#all-groups").innerHTML="";
 
+  let html="";
+
   groups.forEach((g,i)=>{
 
     $("#list").innerHTML+=`
       <div class="group-item">
-        <img src="${g.img}">
+        <img src="${g.img || 'https://via.placeholder.com/80'}">
         <div style="flex:1">
           <b>${g.name}</b><br>
           <small>${g.members} • ${g.status}</small><br>
@@ -373,9 +358,9 @@ function render(){
 
     const isActive = g.status === "ativo";
 
-    const card=`
-      <div class="public-card" style="animation-delay:${i*0.08}s">
-        <img src="${g.img}">
+    html += `
+      <div class="public-card" style="animation:fadeUp .6s ease forwards; animation-delay:${i*0.08}s">
+        <img src="${g.img || 'https://via.placeholder.com/80'}">
         <h3>${g.name}</h3>
 
         <div class="status">
@@ -385,13 +370,12 @@ function render(){
 
         <p>${g.desc || ""}</p>
 
-        <a href="${g.link}" target="_blank">Entrar</a>
+        <a href="${g.link}" target="_blank" rel="noopener noreferrer">Entrar</a>
       </div>
     `;
-
-    $("#all-groups").innerHTML+=card;
-
   });
+
+  $("#all-groups").innerHTML = html;
 }
 
 $("#save").onclick=()=>{
@@ -418,6 +402,15 @@ $("#save").onclick=()=>{
 
   localStorage.setItem(KEY,JSON.stringify(groups));
   render();
+
+  // limpar inputs
+  $("#name").value="";
+  $("#members").value="";
+  $("#img").value="";
+  $("#link").value="";
+  $("#desc").value="";
+  $("#status").value="ativo";
+
   toast("Salvo com sucesso");
 };
 
@@ -429,6 +422,7 @@ function editGroup(id){
   $("#img").value=g.img;
   $("#link").value=g.link;
   $("#desc").value=g.desc;
+  $("#status").value=g.status;
 }
 
 function del(id){
