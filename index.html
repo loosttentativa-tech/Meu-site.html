@@ -1,337 +1,391 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>ENGAJA ELITE</title>
-
 <link rel="icon" href="https://storageblack.cloud/midia/1773117490092.jpg">
-
 <style>
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #050505;
-    color: #fff;
-    overflow-x: hidden;
+:root{
+  --bg:#050505;
+  --card:rgba(20,20,20,0.85);
+  --glass:rgba(255,255,255,0.04);
+  --gold:#d4af37;
+  --muted:#9aa1a6;
+  --accent:#ffd966;
+  --max-width:980px;
+  --radius:16px;
+  --fw-sans: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:var(--fw-sans);
+  background:radial-gradient(1200px 600px at 10% 10%, rgba(212,175,55,0.03), transparent 10%),
+             radial-gradient(1000px 500px at 90% 90%, rgba(255,255,255,0.02), transparent 10%),
+             var(--bg);
+  color:#fff;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 16px;
 }
 
-/* LOADER */
-.loader {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
+/* LOADER (substituível por lógica server-side) */
+.loader{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg,rgba(0,0,0,0.85),rgba(0,0,0,0.9));
+  z-index:60;
+  transition:opacity .45s ease,visibility .45s;
+}
+.loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.loader h1{
+  font-size:26px;
+  letter-spacing:6px;
+  background:linear-gradient(90deg,var(--gold),#fff,var(--gold));
+  background-size:220%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:glow 2.2s linear infinite;
+  margin:0;
+}
+@keyframes glow{0%{background-position:0%}100%{background-position:200%}}
+
+/* LAYOUT CENTRAL */
+.site{
+  width:100%;
+  max-width:var(--max-width);
+  display:grid;
+  grid-template-columns: 360px 1fr;
+  gap:28px;
+  align-items:start;
+  z-index:2;
 }
 
-.loader h1 {
-    font-size: 30px;
-    letter-spacing: 4px;
-    background: linear-gradient(90deg, gold, white, gold);
-    background-size: 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: brilho 2s linear infinite;
+/* CARTÃO LATERAL */
+.aside{
+  background:linear-gradient(180deg,var(--card), rgba(30,30,30,0.6));
+  border-radius:calc(var(--radius) + 6px);
+  padding:22px;
+  border:1px solid rgba(255,255,255,0.04);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
-
-@keyframes brilho {
-    0% { background-position: 0%; }
-    100% { background-position: 200%; }
+.brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom:10px;
 }
-
-/* FUNDO */
-body::before {
-    content: "";
-    position: fixed;
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(circle, rgba(255,215,0,0.05), transparent 60%);
-    animation: girarBg 25s linear infinite;
-    z-index: -1;
-}
-
-@keyframes girarBg {
-    100% { transform: rotate(360deg); }
-}
-
-/* PARTÍCULAS */
-.bg span {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 10px gold;
-    animation: subir linear infinite;
-}
-
-@keyframes subir {
-    0% { transform: translateY(100vh); opacity: 0; }
-    20% { opacity: 1; }
-    100% { transform: translateY(-10vh); opacity: 0; }
-}
-
-/* CENTRAL */
-.wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-
-/* CARD */
-.container {
-    width: 90%;
-    max-width: 360px;
-    padding: 25px;
-    border-radius: 20px;
-    background: rgba(20,20,20,0.8);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.05);
-    text-align: center;
-    animation: entrar 1.2s ease;
-}
-
-@keyframes entrar {
-    from {
-        opacity: 0;
-        transform: translateY(80px) scale(0.9);
-        filter: blur(10px);
-    }
-}
+.brand img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.04)}
+.brand h2{font-size:18px;margin:0}
+.subtitle{color:var(--muted);font-size:13px;margin-top:6px}
 
 /* TABS */
-.tabs {
-    display: flex;
-    margin-bottom: 15px;
+.tabs{
+  display:flex;
+  gap:8px;
+  margin:18px 0;
+  background:var(--glass);
+  padding:6px;
+  border-radius:12px;
+}
+.tab{
+  flex:1;
+  text-align:center;
+  padding:8px 10px;
+  cursor:pointer;
+  border-radius:10px;
+  font-weight:600;
+  color:var(--muted);
+  transition:all .22s;
+  user-select:none;
+}
+.tab.active{
+  background:linear-gradient(90deg, rgba(212,175,55,0.14), rgba(255,255,255,0.02));
+  color:var(--gold);
+  box-shadow:0 6px 18px rgba(212,175,55,0.06);
 }
 
-.tab {
-    flex: 1;
-    padding: 10px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: 0.3s;
+/* LISTA DE GRUPOS */
+.group{
+  margin-bottom:14px;
+  padding:12px;
+  border-radius:12px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  display:grid;
+  grid-template-columns:64px 1fr auto;
+  gap:12px;
+  align-items:center;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.group .thumb{width:64px;height:64px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.03)}
+.group .meta h3{margin:0;font-size:15px}
+.group .meta p{margin:6px 0 0;color:var(--muted);font-size:13px}
+.group .actions{display:flex;flex-direction:column;gap:8px}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:9px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.04);
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.18));
+  color:#fff;
+  text-decoration:none;
+  cursor:pointer;
+  transition:transform .16s ease,box-shadow .16s;
+  font-weight:600;
+  font-size:13px;
+}
+.btn:active{transform:translateY(1px) scale(.995)}
+.btn.ghost{background:transparent;border:1px dashed rgba(255,255,255,0.04);color:var(--muted);font-weight:600}
+.btn.primary{
+  background:linear-gradient(90deg,var(--gold),#fff);
+  color:#111;
+  box-shadow:0 8px 24px rgba(212,175,55,0.14);
 }
 
-.tab.active {
-    border-color: gold;
-    color: gold;
+/* DETALHES EXPANDÍVEIS */
+.details{
+  grid-column:1/-1;
+  margin-top:10px;
+  padding:12px;
+  background:rgba(255,255,255,0.02);
+  border-radius:12px;
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .34s cubic-bezier(.2,.9,.2,1),opacity .25s;
+  opacity:0;
 }
-
-/* CONTEÚDO */
-.content {
-    display: none;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: 0.4s;
-}
-
-.content.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* IMAGEM */
-.group-img {
-    width: 110px;
-    height: 110px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin: 10px auto;
-    display: block;
-}
-
-/* BOTÕES */
-.btn {
-    position: relative;
-    display: block;
-    margin: 12px 0 10px;
-    padding: 12px;
-    border-radius: 12px;
-    background: #111;
-    color: #fff;
-    text-decoration: none;
-    overflow: hidden;
-    transition: 0.3s;
-}
-
-.btn:hover {
-    transform: scale(1.06);
-}
-
-.btn:active {
-    transform: scale(0.95);
-}
-
-/* GLOW */
-.imperio {
-    box-shadow: 0 0 10px gold;
-}
-
-.diamond {
-    box-shadow: 0 0 10px white;
-}
-
-/* INFO GRUPO */
-.grupo-info {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: 0.4s;
-    background: rgba(255,255,255,0.03);
-    border-radius: 12px;
-    padding: 0 10px;
-    margin-bottom: 10px;
-}
-
-.grupo-info.active {
-    max-height: 300px;
-    opacity: 1;
-    padding: 10px;
-}
+.details.open{max-height:380px;opacity:1}
 
 /* STATUS */
-.status {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-right: 5px;
+.status{
+  display:flex;
+  gap:10px;
+  margin-top:8px;
+  align-items:center;
+  color:var(--muted);
+  font-size:13px;
+}
+.pulse{
+  width:9px;height:9px;border-radius:50%;background:#00ff88;box-shadow:0 0 10px rgba(0,255,136,0.12)
 }
 
-.status.on {
-    background: #00ff88;
-    box-shadow: 0 0 8px #00ff88;
+/* AREA PRINCIPAL */
+.main{
+  background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.22));
+  border-radius:calc(var(--radius) + 6px);
+  padding:22px;
+  border:1px solid rgba(255,255,255,0.03);
+  backdrop-filter: blur(6px);
+  min-height:320px;
+}
+.hero{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+.hero-left h1{margin:0;font-size:20px}
+.hero-left p{margin:6px 0 0;color:var(--muted)}
+.ctas{display:flex;gap:10px;align-items:center}
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+  margin-top:18px;
 }
 
-/* BOTÃO ENTRAR */
-.entrar {
-    background: linear-gradient(45deg, gold, #222);
-    font-weight: bold;
+/* PLAN CARD */
+.plan{
+  background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);
+  padding:14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.03);
 }
+.plan h4{margin:0 0 8px}
+.plan p{margin:0;color:var(--muted);font-size:13px}
 
 /* FOOTER */
-.footer {
-    font-size: 12px;
-    color: #777;
+.footer{
+  margin-top:18px;
+  color:var(--muted);
+  font-size:13px;
+  text-align:center;
+}
+
+/* RESPONSIVO */
+@media (max-width:920px){
+  .site{grid-template-columns:1fr;gap:18px}
+  .aside{order:2}
+  .main{order:1}
 }
 </style>
 </head>
-
 <body>
 
-<div class="loader">
-    <h1>ENGAJA ELITE</h1>
-</div>
+<div class="loader" id="loader"><h1>ENGAJA ELITE</h1></div>
 
-<div class="bg"></div>
-
-<div class="wrapper">
-<div class="container">
-
-<h2>👑 ENGAJA ELITE</h2>
-
-<div class="tabs">
-    <div class="tab active" onclick="trocar(0)">Grupos</div>
-    <div class="tab" onclick="trocar(1)">Parceria</div>
-</div>
-
-<!-- GRUPOS -->
-<div class="content active">
-
-    <!-- DIAMOND -->
-    <img class="group-img" src="https://storageblack.cloud/midia/1777330978711.jpg">
-    <a class="btn diamond" onclick="toggleGrupo('diamond')">💎 ENGAJA DIAMOND</a>
-
-    <div id="diamond" class="grupo-info">
-        <p><b>Grupo:</b>⊹ ࣪ ˖ 𖦹 ‧💎𝐄𝐍𝐆𝐀𝐉𝐀 𝐃𝐈𝐀𝐌𝐎𝐍𝐃💎 ² 𖦹 ‧ ˖ ࣪⊹</p>
-        <p><b>Membros:</b> 180+</p>
-        <p><span class="status on"></span> Grupo ativo</p>
-        <p><span class="status on"></span> Bot ativo</p>
-
-        <a class="btn entrar" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4" target="_blank">
-            🚀 ENTRAR AGORA
-        </a>
+<div class="site" role="application" aria-label="Engaja Elite">
+  <aside class="aside" aria-labelledby="brand-title">
+    <div class="brand">
+      <img src="https://storageblack.cloud/midia/1777330978711.jpg" alt="Engaja Elite">
+      <div>
+        <h2 id="brand-title">ENGAJA ELITE</h2>
+        <div class="subtitle">💎 ENGAJA DIAMOND • 🔱 ENGAJA IMPÉRIO</div>
+      </div>
     </div>
 
-    <!-- IMPÉRIO -->
-    <img class="group-img" src="https://storageblack.cloud/midia/1777331201682.jpg">
-    <a class="btn imperio" onclick="toggleGrupo('imperio')">🔱 ENGAJA IMPÉRIO</a>
-
-    <div id="imperio" class="grupo-info">
-        <p><b>Grupo:</b>⊹ ࣪ ˖ 𖦹 ‧🔱𝐄𝐍𝐆𝐀𝐉𝐀 𝐈𝐌𝐏É𝐑𝐈𝐎🔱 ¹ 𖦹 ‧ ˖ ࣪⊹</p>
-        <p><b>Membros:</b> 180+</p>
-        <p><span class="status on"></span> Grupo ativo</p>
-        <p><span class="status on"></span> Bot ativo</p>
-
-        <a class="btn entrar" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU" target="_blank">
-            🚀 ENTRAR AGORA
-        </a>
+    <div class="tabs" role="tablist" aria-label="Seções">
+      <button class="tab active" role="tab" aria-selected="true" data-index="0">Grupos</button>
+      <button class="tab" role="tab" aria-selected="false" data-index="1">Parceria</button>
     </div>
 
-</div>
+    <!-- GRUPOS -->
+    <div id="panels">
+      <div class="panel" data-panel="0" role="tabpanel">
+        <div class="group" data-id="diamond">
+          <img class="thumb" src="https://storageblack.cloud/midia/1777330978711.jpg" alt="Diamond">
+          <div class="meta">
+            <h3>💎 ENGAJA DIAMOND</h3>
+            <p>Comunidade ativa • 180+ membros</p>
+            <div class="status"><span class="pulse" aria-hidden="true"></span><span>Bot e Grupo ativos</span></div>
+          </div>
+          <div class="actions">
+            <button class="btn" data-toggle="diamond">Ver</button>
+            <a class="btn primary" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4" target="_blank" rel="noopener">Entrar</a>
+          </div>
+          <div class="details" id="diamond">
+            <p style="margin:0 0 8px"><strong>Grupo:</strong> ⊹ ࣪ ˖ 𖦹 ‧💎𝐄𝐍𝐆𝐀𝐉𝐀 𝐃𝐈𝐀𝐌𝐎𝐍𝐃💎</p>
+            <p style="margin:0 0 8px"><strong>Membros:</strong> 180+</p>
+            <p style="margin:0 0 12px">Descrição curta com regras, horários de eventos e link fixo.</p>
+            <a class="btn ghost" href="#" onclick="event.preventDefault()">Ver regras</a>
+          </div>
+        </div>
 
-<!-- PARCERIA -->
-<div class="content">
-    <p>Quer fazer parceria com meus grupos?</p>
-    <a class="btn parceria" href="https://wa.me/557588379574" target="_blank">
-        🤝 fale comigo
-    </a>
-</div>
+        <div class="group" data-id="imperio">
+          <img class="thumb" src="https://storageblack.cloud/midia/1777331201682.jpg" alt="Império">
+          <div class="meta">
+            <h3>🔱 ENGAJA IMPÉRIO</h3>
+            <p>Comunidade premium • 180+ membros</p>
+            <div class="status"><span class="pulse" aria-hidden="true"></span><span>Bot e Grupo ativos</span></div>
+          </div>
+          <div class="actions">
+            <button class="btn" data-toggle="imperio">Ver</button>
+            <a class="btn primary" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU" target="_blank" rel="noopener">Entrar</a>
+          </div>
+          <div class="details" id="imperio">
+            <p style="margin:0 0 8px"><strong>Grupo:</strong> ⊹ ࣪ ˖ 𖦹 ‧🔱𝐄𝐍𝐆𝐀𝐉𝐀 𝐈𝐌𝐏É𝐑𝐈𝐎🔱</p>
+            <p style="margin:0 0 8px"><strong>Membros:</strong> 180+</p>
+            <p style="margin:0 0 12px">Descrição curta com benefícios, regras e contatos de admins.</p>
+            <a class="btn ghost" href="#" onclick="event.preventDefault()">Ver admins</a>
+          </div>
+        </div>
+      </div>
 
-<div class="footer">by: wa.me/marcos</div>
+      <!-- PARCERIA -->
+      <div class="panel" data-panel="1" hidden>
+        <div style="padding:6px 0">
+          <p style="margin:0 0 12px;color:var(--muted)">Quer fazer parceria com nossos grupos? Oferecemos divulgação, posts fixos e vantagens para parceiros.</p>
+          <a class="btn primary" href="https://wa.me/557588379574" target="_blank" rel="noopener">🤝 Fale conosco</a>
+        </div>
+      </div>
+    </div>
 
-</div>
+    <div style="margin-top:18px;color:var(--muted);font-size:13px">by: <a href="https://wa.me/557588379574" style="color:var(--accent);text-decoration:none">wa.me/marcos</a></div>
+  </aside>
+
+  <main class="main" aria-live="polite">
+    <div class="hero">
+      <div class="hero-left">
+        <h1>Bem-vindo ao ENG AJA ELITE</h1>
+        <p class="subtitle">Comunidades exclusivas • Bots automatizados • Eventos semanais</p>
+      </div>
+      <div class="ctas">
+        <a class="btn ghost" href="#" onclick="event.preventDefault()">Sobre</a>
+        <a class="btn primary" href="#" onclick="event.preventDefault()">Assinar</a>
+      </div>
+    </div>
+
+    <div class="card-grid" aria-hidden="false">
+      <div class="plan">
+        <h4>Plano Grátis</h4>
+        <p>Participação básica, acesso a canais públicos e notificações.</p>
+      </div>
+      <div class="plan">
+        <h4>Engaja Diamond</h4>
+        <p>Acesso a canais exclusivos, sorteios e prioridade em eventos.</p>
+      </div>
+      <div class="plan">
+        <h4>Engaja Império</h4>
+        <p>Acesso VIP, consultoria e posts fixos de parceira.</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2026 Engaja Elite • Termos • Privacidade
+    </div>
+  </main>
 </div>
 
 <script>
+/* loader */
+const loader = document.getElementById('loader');
+window.addEventListener('load', () => {
+  setTimeout(()=> loader.classList.add('hidden'), 700);
+});
 
-/* LOADER */
-setTimeout(() => {
-    document.querySelector(".loader").style.opacity = "0";
-    setTimeout(() => document.querySelector(".loader").remove(), 500);
-}, 2000);
+/* partículas leves - criado com CSS em background para performance */
 
-/* PARTÍCULAS */
-const bg = document.querySelector(".bg");
-for(let i=0;i<25;i++){
-    let span = document.createElement("span");
-    span.style.left = Math.random()*100+"%";
-    span.style.animationDuration = (5 + Math.random()*5)+"s";
-    bg.appendChild(span);
-}
+/* TABS (acessível) */
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+tabs.forEach(t=>{
+  t.addEventListener('click', ()=>{
+    const idx = t.dataset.index;
+    tabs.forEach(x=>{ x.classList.toggle('active', x===t); x.setAttribute('aria-selected', x===t); });
+    panels.forEach(p=>{
+      const show = p.dataset.panel === idx;
+      p.hidden = !show;
+    });
+  });
+});
 
-/* TABS */
-function trocar(i){
-    let tabs = document.querySelectorAll(".tab");
-    let content = document.querySelectorAll(".content");
+/* EXPAND / COLLAPSE detalhes de grupo */
+document.querySelectorAll('[data-toggle]').forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    const id = btn.dataset.toggle;
+    const el = document.getElementById(id);
+    const open = el.classList.toggle('open');
+    // fechar outros
+    document.querySelectorAll('.details').forEach(d=>{ if(d.id!==id) d.classList.remove('open') });
+    // rolar até o bloco aberto em dispositivos pequenos
+    if(open) el.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+});
 
-    tabs.forEach(t => t.classList.remove("active"));
-    content.forEach(c => c.classList.remove("active"));
-
-    tabs[i].classList.add("active");
-    content[i].classList.add("active");
-}
-
-/* ABRIR GRUPO */
-function toggleGrupo(id){
-    let el = document.getElementById(id);
-
-    if(el.classList.contains("active")){
-        el.classList.remove("active");
-    } else {
-        document.querySelectorAll(".grupo-info").forEach(g => g.classList.remove("active"));
-        el.classList.add("active");
-    }
-}
-
+/* recomendações de pequenas melhorias:
+   - substituir links diretos por redirects para analytics seguro (rel="noopener")
+   - implementar validação server-side para formulários de parceria
+   - usar SVGs otimizados e sprites para ícones
+*/
 </script>
-
 </body>
-    </html>
+</html>
+```
+
+Se quiser, adapto:
+- esquema de cores claro/escuro automático;
+- adicionar formulário de contato funcional (back-end);
+- gerar versão em React/Vue com componentes reutilizáveis. Qual prefere?
