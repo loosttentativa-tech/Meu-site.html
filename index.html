@@ -163,7 +163,8 @@ window.login = async () => {
       alert("Email inválido.");
     } 
     else {
-      alert("Erro ao fazer login.");
+      alert(error.code);
+console.log(error);
       console.error(error);
     }
   }
