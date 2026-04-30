@@ -39,35 +39,50 @@ padding:8px;
 margin:5px;
 width:200px;
 }
+
+a{
+color:lightblue;
+}
 </style>
 </head>
 <body>
 
 <h1>Painel</h1>
 
-<input id="email" placeholder="Email">
-<input id="senha" type="password" placeholder="Senha">
-<button onclick="login()">Entrar</button>
-<button onclick="registrar()">Registrar</button>
+<!-- LOGIN -->
+<div id="auth">
+  <input id="email" placeholder="Email">
+  <input id="senha" type="password" placeholder="Senha">
+  <button onclick="login()">Entrar</button>
+  <button onclick="registrar()">Registrar</button>
+</div>
 
-<hr>
+<!-- PAINEL -->
+<div id="painel" style="display:none;">
 
-<h3>Adicionar Grupo</h3>
+  <p id="userInfo"></p>
+  <button onclick="logout()">Sair</button>
 
-<input id="nome" placeholder="Nome">
-<input id="foto" placeholder="URL da foto">
-<input id="membros" type="number" placeholder="Membros">
-<input id="link" placeholder="Link do grupo WhatsApp">
+  <hr>
 
-<select id="status">
-<option value="online">Online</option>
-<option value="offline">Offline</option>
-</select>
+  <h3>Adicionar Grupo</h3>
 
-<button onclick="addGrupo()">Adicionar</button>
+  <input id="nome" placeholder="Nome">
+  <input id="foto" placeholder="URL da foto">
+  <input id="membros" type="number" placeholder="Membros">
+  <input id="link" placeholder="Link do grupo WhatsApp">
 
-<h3>Seus Grupos</h3>
-<div id="lista"></div>
+  <select id="status">
+    <option value="online">Online</option>
+    <option value="offline">Offline</option>
+  </select>
+
+  <button onclick="addGrupo()">Adicionar</button>
+
+  <h3>Seus Grupos</h3>
+  <div id="lista"></div>
+
+</div>
 
 <script type="module">
 
@@ -77,7 +92,8 @@ import {
 getAuth,
 signInWithEmailAndPassword,
 createUserWithEmailAndPassword,
-onAuthStateChanged
+onAuthStateChanged,
+signOut
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 import {
@@ -107,7 +123,7 @@ const db = getFirestore(app);
 
 let user = null;
 
-// 🔗 VALIDAÇÃO LINK WHATSAPP
+// 🔗 VALIDAR LINK WHATSAPP
 function linkValido(url){
   const regex = /^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9]{20,}$/;
   return regex.test(url);
@@ -139,7 +155,12 @@ window.login = async()=>{
   }
 };
 
-// ➕ ADICIONAR GRUPO
+// 🚪 LOGOUT
+window.logout = async()=>{
+  await signOut(auth);
+};
+
+// ➕ ADD GRUPO
 window.addGrupo = async()=>{
 
   if(!user){
@@ -168,18 +189,33 @@ window.addGrupo = async()=>{
   });
 };
 
-// 🔁 MANTER LOGIN
+// 🔁 CONTROLE DE LOGIN
 onAuthStateChanged(auth,u=>{
+  const authDiv = document.getElementById("auth");
+  const painel = document.getElementById("painel");
+  const userInfo = document.getElementById("userInfo");
+
   if(u){
-    user=u;
+    user = u;
+
+    authDiv.style.display = "none";
+    painel.style.display = "block";
+
+    userInfo.innerText = "Logado como: " + u.email;
+
     carregar();
   } else {
-    lista.innerHTML = "<p>Faça login</p>";
+    user = null;
+
+    authDiv.style.display = "block";
+    painel.style.display = "none";
   }
 });
 
 // 📦 LISTAR GRUPOS DO USUÁRIO
 function carregar(){
+
+  const lista = document.getElementById("lista");
 
   const q = query(
     collection(db,"grupos"),
@@ -187,7 +223,6 @@ function carregar(){
   );
 
   onSnapshot(q,snapshot=>{
-    const lista = document.getElementById("lista");
     lista.innerHTML="";
 
     snapshot.forEach(docu=>{
