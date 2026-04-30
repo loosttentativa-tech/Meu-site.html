@@ -125,8 +125,9 @@ let user = null;
 
 // 🔗 VALIDAR LINK WHATSAPP
 function linkValido(url){
-  const regex = /^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9]+$/;
-  return regex.test(url.trim());
+  url = url.trim();
+
+  return url.startsWith("https://chat.whatsapp.com/") && url.length > 30;
 }
 
 // 🔐 REGISTRAR
