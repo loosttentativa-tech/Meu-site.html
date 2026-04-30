@@ -12,17 +12,15 @@
   --bg:#050505;
   --card:#0e0e0e;
   --white:#ffffff;
-  --soft:#bfbfbf;
   --muted:#777;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;
-  background: radial-gradient(circle at top, #1a1a1a 0%, #050505 70%);
-  color:var(--white);
-  overflow-x:hidden;
+  background: radial-gradient(circle at top,#1a1a1a,#050505);
+  color:#fff;
 }
 
 /* brilho */
@@ -31,13 +29,11 @@ body::before{
   position:fixed;
   width:200%;
   height:200%;
-  background:linear-gradient(120deg, transparent, rgba(255,255,255,0.05), transparent);
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,0.05),transparent);
   animation:shine 10s linear infinite;
   pointer-events:none;
 }
-
 @keyframes shine{
-  0%{transform:translateX(-50%)}
   100%{transform:translateX(50%)}
 }
 
@@ -47,6 +43,7 @@ body::before{
   padding:20px;
 }
 
+/* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
@@ -54,58 +51,64 @@ body::before{
   margin-bottom:20px;
 }
 
-.header h2{
-  font-size:22px;
-  letter-spacing:1px;
-  background:linear-gradient(90deg,#fff,#888,#fff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
 .btn{
-  background:linear-gradient(135deg,#fff,#bfbfbf);
+  background:linear-gradient(135deg,#fff,#bbb);
   color:#000;
   border:none;
   padding:10px 16px;
   border-radius:999px;
-  font-weight:700;
   cursor:pointer;
+  font-weight:bold;
 }
 
-/* cards */
-.card{
-  background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(0,0,0,0.7));
-  border-radius:20px;
-  padding:20px;
-  margin-top:20px;
-  backdrop-filter: blur(10px);
-}
-
-.grid-public{
+/* CARD */
+.grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
   gap:20px;
 }
 
-.public-card{
-  background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(0,0,0,0.7));
+.card{
+  background:linear-gradient(145deg,rgba(255,255,255,0.03),rgba(0,0,0,0.7));
+  padding:20px;
   border-radius:20px;
-  padding:18px;
   text-align:center;
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.05);
+  transition:.3s;
 }
 
-.public-card img{
+.card:hover{
+  transform:translateY(-8px);
+}
+
+.card img{
   width:80px;
   height:80px;
   border-radius:50%;
+  margin-bottom:10px;
 }
 
+/* STATUS */
 .status{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
   font-size:13px;
-  color:#888;
+  color:var(--muted);
 }
 
-.public-card a{
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+}
+
+.active{background:#00ff88;}
+.inactive{background:#ff3b3b;}
+
+.card a{
   display:inline-block;
   margin-top:10px;
   padding:8px 14px;
@@ -115,19 +118,28 @@ body::before{
   text-decoration:none;
 }
 
+/* FORM */
+input,textarea,select{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:10px;
+  border:1px solid #222;
+  background:#000;
+  color:#fff;
+}
+
 /* LOGIN MODAL */
 .login-modal{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,0.7);
-  backdrop-filter:blur(8px);
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   opacity:0;
   pointer-events:none;
   transition:.3s;
-  z-index:999;
 }
 
 .login-modal.show{
@@ -137,34 +149,11 @@ body::before{
 
 .login-box{
   background:#111;
-  padding:30px;
+  padding:25px;
   border-radius:20px;
-  width:280px;
-  text-align:center;
+  width:260px;
 }
 
-.login-box input{
-  width:100%;
-  padding:10px;
-  margin:10px 0;
-  border-radius:10px;
-  border:1px solid #333;
-  background:#000;
-  color:#fff;
-}
-
-/* toast */
-.toast{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#111;
-  padding:10px;
-  border-radius:10px;
-  opacity:0;
-  transition:.3s;
-}
-.toast.show{opacity:1;}
 </style>
 </head>
 
@@ -173,76 +162,63 @@ body::before{
 <div class="container">
 
 <div class="header">
-  <h2>👑 Painel ADM</h2>
+  <h2>👑 ENGAJA ELITE</h2>
   <div>
     <button id="login" class="btn">Entrar</button>
     <button id="logout" class="btn" style="display:none">Sair</button>
   </div>
 </div>
 
+<!-- ADMIN -->
 <div id="admin" style="display:none">
-<div class="card">
-  <h3>Novo Grupo</h3>
   <input id="name" placeholder="Nome">
+  <input id="members" placeholder="Membros">
+  <input id="img" placeholder="Imagem URL">
   <input id="link" placeholder="Link WhatsApp">
+  <select id="status">
+    <option value="ativo">Ativo</option>
+    <option value="inativo">Inativo</option>
+  </select>
+  <textarea id="desc" placeholder="Descrição"></textarea>
   <button id="save" class="btn">Salvar</button>
 </div>
-</div>
 
-<div class="card">
-  <div id="all-groups" class="grid-public"></div>
-</div>
+<!-- LISTA -->
+<div id="list" class="grid"></div>
 
 </div>
 
 <!-- LOGIN -->
 <div id="loginModal" class="login-modal">
   <div class="login-box">
-    <h2>🔐 Acesso</h2>
-    <input type="password" id="loginPass" placeholder="Senha">
-    <button id="loginBtn" class="btn">Entrar</button>
-    <p id="loginError" style="display:none;color:red;">Senha incorreta</p>
+    <h3>🔐 Acesso</h3>
+    <input type="password" id="pass" placeholder="Senha">
+    <button id="doLogin" class="btn">Entrar</button>
+    <p id="erro" style="display:none;color:red;">Senha incorreta</p>
   </div>
 </div>
 
-<div id="toast" class="toast"></div>
-
 <script>
-document.addEventListener("DOMContentLoaded", ()=>{
-
 const PW="1234";
-let groups=[];
+const KEY="groups_v3";
+
+let groups=JSON.parse(localStorage.getItem(KEY))||[];
 
 const $=e=>document.querySelector(e);
 
+/* LOGIN */
 const modal=$("#loginModal");
-const input=$("#loginPass");
-const error=$("#loginError");
 
-$("#login").onclick=()=>{
-  modal.classList.add("show");
-};
+$("#login").onclick=()=>modal.classList.add("show");
 
-$("#loginBtn").onclick=()=>{
-  if(input.value===PW){
+$("#doLogin").onclick=()=>{
+  if($("#pass").value===PW){
     modal.classList.remove("show");
     $("#admin").style.display="block";
     $("#login").style.display="none";
     $("#logout").style.display="inline-block";
-    input.value="";
-    error.style.display="none";
   }else{
-    error.style.display="block";
-  }
-};
-
-input.addEventListener("keypress",(e)=>{
-  if(e.key==="Enter") $("#loginBtn").click();
-});
-
-modal.onclick=(e)=>{
-  if(e.target===modal){
-    modal.classList.remove("show");
+    $("#erro").style.display="block";
   }
 };
 
@@ -252,29 +228,50 @@ $("#logout").onclick=()=>{
   $("#logout").style.display="none";
 };
 
+modal.onclick=(e)=>{
+  if(e.target===modal) modal.classList.remove("show");
+};
+
+/* RENDER */
 function render(){
-  let html="";
+  $("#list").innerHTML="";
   groups.forEach(g=>{
-    html+=`
-    <div class="public-card">
+    const isActive=g.status==="ativo";
+    $("#list").innerHTML+=`
+    <div class="card">
+      <img src="${g.img}">
       <h3>${g.name}</h3>
+
+      <div class="status">
+        <div class="dot ${isActive?'active':'inactive'}"></div>
+        ${g.members}
+      </div>
+
+      <p>${g.desc||""}</p>
+
       <a href="${g.link}" target="_blank">Entrar</a>
-    </div>`;
+    </div>
+    `;
   });
-  $("#all-groups").innerHTML=html;
 }
 
+/* SALVAR */
 $("#save").onclick=()=>{
-  groups.push({
+  let data={
     name:$("#name").value,
-    link:$("#link").value
-  });
+    members:$("#members").value,
+    img:$("#img").value,
+    link:$("#link").value,
+    status:$("#status").value,
+    desc:$("#desc").value
+  };
+
+  groups.unshift(data);
+  localStorage.setItem(KEY,JSON.stringify(groups));
   render();
 };
 
 render();
-
-});
 </script>
 
 </body>
