@@ -25,6 +25,7 @@ body{
   overflow-x:hidden;
 }
 
+/* brilho */
 body::before{
   content:"";
   position:fixed;
@@ -32,6 +33,7 @@ body::before{
   height:200%;
   background:linear-gradient(120deg, transparent, rgba(255,255,255,0.05), transparent);
   animation:shine 10s linear infinite;
+  pointer-events:none;
 }
 
 @keyframes shine{
@@ -68,22 +70,15 @@ body::before{
   border-radius:999px;
   font-weight:700;
   cursor:pointer;
-  box-shadow:0 0 15px rgba(255,255,255,0.2);
-  transition:.3s;
 }
 
-.btn:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 25px rgba(255,255,255,0.4);
-}
-
+/* cards */
 .card{
   background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(0,0,0,0.7));
   border-radius:20px;
   padding:20px;
   margin-top:20px;
   backdrop-filter: blur(10px);
-  border:1px solid rgba(255,255,255,0.06);
 }
 
 .grid-public{
@@ -97,84 +92,79 @@ body::before{
   border-radius:20px;
   padding:18px;
   text-align:center;
-  border:1px solid rgba(255,255,255,0.06);
-  position:relative;
-  backdrop-filter: blur(10px);
 }
 
 .public-card img{
   width:80px;
   height:80px;
   border-radius:50%;
-  margin-bottom:10px;
-  border:2px solid #fff;
 }
 
 .status{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
   font-size:13px;
-  color:var(--muted);
+  color:#888;
 }
-
-.dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-}
-
-.active{ background:#00ff88; }
-.inactive{ background:#ff3b3b; }
 
 .public-card a{
   display:inline-block;
   margin-top:10px;
-  padding:9px 16px;
+  padding:8px 14px;
   border-radius:999px;
-  background:linear-gradient(135deg,#fff,#ccc);
+  background:#fff;
   color:#000;
-  font-weight:700;
   text-decoration:none;
 }
 
-input,select,textarea{
+/* LOGIN MODAL */
+.login-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(8px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+  z-index:999;
+}
+
+.login-modal.show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.login-box{
+  background:#111;
+  padding:30px;
+  border-radius:20px;
+  width:280px;
+  text-align:center;
+}
+
+.login-box input{
   width:100%;
   padding:10px;
+  margin:10px 0;
   border-radius:10px;
-  border:1px solid #222;
+  border:1px solid #333;
   background:#000;
   color:#fff;
-  margin-bottom:10px;
 }
 
-.group-item{
-  display:flex;
-  gap:12px;
-  align-items:center;
-  padding:10px;
-}
-
-.group-item img{
-  width:50px;
-  height:50px;
-  border-radius:50%;
-}
-
+/* toast */
 .toast{
   position:fixed;
   bottom:20px;
   right:20px;
   background:#111;
-  padding:12px;
+  padding:10px;
   border-radius:10px;
   opacity:0;
   transition:.3s;
 }
-.toast.show{
-  opacity:1;
-}
+.toast.show{opacity:1;}
 </style>
 </head>
 
@@ -191,37 +181,28 @@ input,select,textarea{
 </div>
 
 <div id="admin" style="display:none">
-
-<div class="card">
-  <h3>Grupos</h3>
-  <div id="list"></div>
-</div>
-
 <div class="card">
   <h3>Novo Grupo</h3>
-
   <input id="name" placeholder="Nome">
-  <input id="members" placeholder="Membros">
-  <input id="img" placeholder="Imagem URL">
   <input id="link" placeholder="Link WhatsApp">
-  
-  <select id="status">
-    <option value="ativo">Ativo</option>
-    <option value="inativo">Inativo</option>
-  </select>
-
-  <textarea id="desc" placeholder="Descrição"></textarea>
-
   <button id="save" class="btn">Salvar</button>
 </div>
-
 </div>
 
 <div class="card">
-  <div>Grupos</div>
   <div id="all-groups" class="grid-public"></div>
 </div>
 
+</div>
+
+<!-- LOGIN -->
+<div id="loginModal" class="login-modal">
+  <div class="login-box">
+    <h2>🔐 Acesso</h2>
+    <input type="password" id="loginPass" placeholder="Senha">
+    <button id="loginBtn" class="btn">Entrar</button>
+    <p id="loginError" style="display:none;color:red;">Senha incorreta</p>
+  </div>
 </div>
 
 <div id="toast" class="toast"></div>
@@ -230,25 +211,38 @@ input,select,textarea{
 document.addEventListener("DOMContentLoaded", ()=>{
 
 const PW="1234";
-const KEY="groups_v2";
-
-let groups=JSON.parse(localStorage.getItem(KEY))||[];
-let edit=null;
+let groups=[];
 
 const $=e=>document.querySelector(e);
 
-function toast(msg){
-  const t=$("#toast");
-  t.innerText=msg;
-  t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"),2000);
-}
+const modal=$("#loginModal");
+const input=$("#loginPass");
+const error=$("#loginError");
 
 $("#login").onclick=()=>{
-  if(prompt("Senha")==PW){
+  modal.classList.add("show");
+};
+
+$("#loginBtn").onclick=()=>{
+  if(input.value===PW){
+    modal.classList.remove("show");
     $("#admin").style.display="block";
     $("#login").style.display="none";
     $("#logout").style.display="inline-block";
+    input.value="";
+    error.style.display="none";
+  }else{
+    error.style.display="block";
+  }
+};
+
+input.addEventListener("keypress",(e)=>{
+  if(e.key==="Enter") $("#loginBtn").click();
+});
+
+modal.onclick=(e)=>{
+  if(e.target===modal){
+    modal.classList.remove("show");
   }
 };
 
@@ -259,98 +253,23 @@ $("#logout").onclick=()=>{
 };
 
 function render(){
-  $("#list").innerHTML="";
-  $("#all-groups").innerHTML="";
-
   let html="";
-
   groups.forEach(g=>{
-
-    $("#list").innerHTML+=`
-      <div class="group-item">
-        <img src="${g.img || 'https://via.placeholder.com/80'}">
-        <div>
-          <b>${g.name}</b><br>
-          <button onclick="editGroup('${g.id}')">Editar</button>
-          <button onclick="del('${g.id}')">Remover</button>
-        </div>
-      </div>
-    `;
-
-    const isActive = g.status === "ativo";
-
-    html += `
-      <div class="public-card">
-        <img src="${g.img || 'https://via.placeholder.com/80'}">
-        <h3>${g.name}</h3>
-
-        <div class="status">
-          <div class="dot ${isActive ? "active" : "inactive"}"></div>
-          ${g.members}
-        </div>
-
-        <p>${g.desc || ""}</p>
-
-        <a href="${g.link}" target="_blank" rel="noopener noreferrer">Entrar</a>
-      </div>
-    `;
+    html+=`
+    <div class="public-card">
+      <h3>${g.name}</h3>
+      <a href="${g.link}" target="_blank">Entrar</a>
+    </div>`;
   });
-
-  $("#all-groups").innerHTML = html;
+  $("#all-groups").innerHTML=html;
 }
 
 $("#save").onclick=()=>{
-  let data={
-    id:edit||Date.now(),
+  groups.push({
     name:$("#name").value,
-    members:$("#members").value,
-    img:$("#img").value,
-    link:$("#link").value,
-    status:$("#status").value,
-    desc:$("#desc").value
-  };
-
-  if(!data.link.includes("chat.whatsapp.com")){
-    return alert("Link inválido");
-  }
-
-  if(edit){
-    groups=groups.map(g=>g.id==edit?data:g);
-    edit=null;
-  }else{
-    groups.unshift(data);
-  }
-
-  localStorage.setItem(KEY,JSON.stringify(groups));
+    link:$("#link").value
+  });
   render();
-
-  $("#name").value="";
-  $("#members").value="";
-  $("#img").value="";
-  $("#link").value="";
-  $("#desc").value="";
-  $("#status").value="ativo";
-
-  toast("Salvo");
-};
-
-window.editGroup = function(id){
-  let g=groups.find(x=>x.id==id);
-  edit=id;
-  $("#name").value=g.name;
-  $("#members").value=g.members;
-  $("#img").value=g.img;
-  $("#link").value=g.link;
-  $("#desc").value=g.desc;
-  $("#status").value=g.status;
-};
-
-window.del = function(id){
-  if(confirm("Remover grupo?")){
-    groups=groups.filter(g=>g.id!=id);
-    localStorage.setItem(KEY,JSON.stringify(groups));
-    render();
-  }
 };
 
 render();
