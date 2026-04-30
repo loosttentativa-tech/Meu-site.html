@@ -31,11 +31,13 @@ border-radius:50%;
 button{
 padding:8px;
 margin:5px;
+cursor:pointer;
 }
 
 input,select{
 padding:8px;
 margin:5px;
+width:200px;
 }
 </style>
 </head>
@@ -50,9 +52,12 @@ margin:5px;
 
 <hr>
 
+<h3>Adicionar Grupo</h3>
+
 <input id="nome" placeholder="Nome">
 <input id="foto" placeholder="URL da foto">
 <input id="membros" type="number" placeholder="Membros">
+<input id="link" placeholder="Link do grupo WhatsApp">
 
 <select id="status">
 <option value="online">Online</option>
@@ -61,6 +66,7 @@ margin:5px;
 
 <button onclick="addGrupo()">Adicionar</button>
 
+<h3>Seus Grupos</h3>
 <div id="lista"></div>
 
 <script type="module">
@@ -87,12 +93,9 @@ onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyA18Evh4E-BCu2P7ipJE7wmRWrtcpcuL4c",
-  authDomain: "website-e6c83.firebaseapp.com",
-  projectId: "website-e6c83",
-  storageBucket: "website-e6c83.firebasestorage.app",
-  messagingSenderId: "1005197181047",
-  appId: "1:1005197181047:web:6e3821ed4658d068524672"
+apiKey: "SUA_KEY",
+authDomain: "SEU_DOMINIO",
+projectId: "SEU_ID"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -101,74 +104,118 @@ const db = getFirestore(app);
 
 let user = null;
 
-window.registrar = async()=>{
-await createUserWithEmailAndPassword(auth,email.value,senha.value);
-};
-
-window.login = async()=>{
-await signInWithEmailAndPassword(auth,email.value,senha.value);
-};
-
-window.addGrupo = async()=>{
-await addDoc(collection(db,"grupos"),{
-nome:nome.value,
-foto:foto.value,
-membros:Number(membros.value),
-status:status.value,
-owner:user.uid
-});
-};
-
-onAuthStateChanged(auth,u=>{
-if(u){
-user=u;
-carregar();
+// 🔗 VALIDAÇÃO LINK WHATSAPP
+function linkValido(url){
+  const regex = /^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9]{20,}$/;
+  return regex.test(url);
 }
+
+// 🔐 REGISTRAR
+window.registrar = async()=>{
+  try{
+    await createUserWithEmailAndPassword(auth,email.value,senha.value);
+    alert("Conta criada!");
+  }catch(e){
+    alert(e.code);
+  }
+};
+
+// 🔓 LOGIN
+window.login = async()=>{
+  try{
+    await signInWithEmailAndPassword(auth,email.value,senha.value);
+    alert("Logado!");
+  }catch(e){
+    alert(e.code);
+  }
+};
+
+// ➕ ADICIONAR GRUPO
+window.addGrupo = async()=>{
+
+  if(!user){
+    alert("Faça login primeiro");
+    return;
+  }
+
+  const link = linkInput.value;
+
+  if(!linkValido(link)){
+    alert("Link do WhatsApp inválido");
+    return;
+  }
+
+  await addDoc(collection(db,"grupos"),{
+    nome:nome.value,
+    foto:foto.value,
+    membros:Number(membros.value),
+    status:status.value,
+    link:link,
+    owner:user.uid
+  });
+};
+
+// 🔁 MANTER LOGIN
+onAuthStateChanged(auth,u=>{
+  if(u){
+    user=u;
+    carregar();
+  }
 });
 
+// 📦 LISTAR GRUPOS DO USUÁRIO
 function carregar(){
 
-const q = query(
-collection(db,"grupos"),
-where("owner","==",user.uid)
-);
+  const q = query(
+    collection(db,"grupos"),
+    where("owner","==",user.uid)
+  );
 
-onSnapshot(q,snapshot=>{
-lista.innerHTML="";
+  onSnapshot(q,snapshot=>{
+    lista.innerHTML="";
 
-snapshot.forEach(docu=>{
-const g = docu.data();
+    snapshot.forEach(docu=>{
+      const g = docu.data();
 
-const div=document.createElement("div");
+      const div=document.createElement("div");
+      div.className="card";
 
-div.className="card";
+      div.innerHTML=`
+        <img src="${g.foto}">
+        <div>
+          <b>${g.nome}</b><br>
+          ${g.membros} membros<br>
+          <a href="${g.link}" target="_blank">Entrar no grupo</a>
+        </div>
+        <button onclick="editar('${docu.id}')">Editar</button>
+        <button onclick="remover('${docu.id}')">Remover</button>
+      `;
 
-div.innerHTML=`
-<img src="${g.foto}">
-<div>
-<b>${g.nome}</b><br>
-${g.membros}
-</div>
-<button onclick="editar('${docu.id}')">Editar</button>
-<button onclick="remover('${docu.id}')">Remover</button>
-`;
-
-lista.appendChild(div);
-});
-});
+      lista.appendChild(div);
+    });
+  });
 }
 
+// ❌ REMOVER
 window.remover = async(id)=>{
-await deleteDoc(doc(db,"grupos",id));
+  await deleteDoc(doc(db,"grupos",id));
 };
 
+// ✏️ EDITAR
 window.editar = async(id)=>{
-const novoNome = prompt("Novo nome:");
-if(novoNome){
-await updateDoc(doc(db,"grupos",id),{
-nome:novoNome
-});
-}
+
+  const novoNome = prompt("Novo nome:");
+  const novoLink = prompt("Novo link WhatsApp:");
+
+  if(novoLink && !linkValido(novoLink)){
+    alert("Link inválido!");
+    return;
+  }
+
+  await updateDoc(doc(db,"grupos",id),{
+    nome: novoNome,
+    link: novoLink
+  });
 };
 
 </script>
