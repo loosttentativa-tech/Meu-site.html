@@ -94,11 +94,11 @@ onSnapshot
 
 const firebaseConfig = {
 apiKey: "AIzaSyA18Evh4E-BCu2P7ipJE7wmRWrtcpcuL4c",
-  authDomain: "website-e6c83.firebaseapp.com",
-  projectId: "website-e6c83",
-  storageBucket: "website-e6c83.firebasestorage.app",
-  messagingSenderId: "1005197181047",
-  appId: "1:1005197181047:web:6e3821ed4658d068524672"
+authDomain: "website-e6c83.firebaseapp.com",
+projectId: "website-e6c83",
+storageBucket: "website-e6c83.firebasestorage.app",
+messagingSenderId: "1005197181047",
+appId: "1:1005197181047:web:6e3821ed4658d068524672"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -116,7 +116,10 @@ function linkValido(url){
 // 🔐 REGISTRAR
 window.registrar = async()=>{
   try{
-    await createUserWithEmailAndPassword(auth,email.value,senha.value);
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
+    await createUserWithEmailAndPassword(auth,email,senha);
     alert("Conta criada!");
   }catch(e){
     alert(e.code);
@@ -126,7 +129,10 @@ window.registrar = async()=>{
 // 🔓 LOGIN
 window.login = async()=>{
   try{
-    await signInWithEmailAndPassword(auth,email.value,senha.value);
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
+    await signInWithEmailAndPassword(auth,email,senha);
     alert("Logado!");
   }catch(e){
     alert(e.code);
@@ -141,7 +147,11 @@ window.addGrupo = async()=>{
     return;
   }
 
-  const link = linkInput.value;
+  const nome = document.getElementById("nome").value;
+  const foto = document.getElementById("foto").value;
+  const membros = document.getElementById("membros").value;
+  const status = document.getElementById("status").value;
+  const link = document.getElementById("link").value;
 
   if(!linkValido(link)){
     alert("Link do WhatsApp inválido");
@@ -149,11 +159,11 @@ window.addGrupo = async()=>{
   }
 
   await addDoc(collection(db,"grupos"),{
-    nome:nome.value,
-    foto:foto.value,
-    membros:Number(membros.value),
-    status:status.value,
-    link:link,
+    nome,
+    foto,
+    membros:Number(membros),
+    status,
+    link,
     owner:user.uid
   });
 };
@@ -163,6 +173,8 @@ onAuthStateChanged(auth,u=>{
   if(u){
     user=u;
     carregar();
+  } else {
+    lista.innerHTML = "<p>Faça login</p>";
   }
 });
 
@@ -175,6 +187,7 @@ function carregar(){
   );
 
   onSnapshot(q,snapshot=>{
+    const lista = document.getElementById("lista");
     lista.innerHTML="";
 
     snapshot.forEach(docu=>{
