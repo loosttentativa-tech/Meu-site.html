@@ -72,73 +72,111 @@ img{
     box-shadow:0 0 10px currentColor;
 }
 
-.ativo{
+.online{
     background:#00ff7f;
     color:#00ff7f;
 }
 
-.inativo{
+.offline{
     background:#ff3b3b;
     color:#ff3b3b;
 }
 
 /* BOTÃO ENTRAR */
 .btn{
-    padding:8px 10px;
+    padding:8px 12px;
     border:none;
     border-radius:8px;
     font-weight:bold;
     cursor:pointer;
     background: linear-gradient(135deg,#00ff88,#00c3ff);
     color:#000;
+    text-decoration: none;
+    font-size: 14px;
     transition:0.3s;
+    display: inline-block;
 }
 
 .btn:hover{
     transform: scale(1.05);
     box-shadow:0 0 12px rgba(0,255,200,0.5);
 }
+
+#carregando {
+    text-align: center;
+    color: #00ff88;
+}
 </style>
 </head>
 
 <body>
 
-<h1>Grupos</h1>
+<h1>Grupos Disponíveis</h1>
 
-<div class="card">
-    <img src="https://i.pravatar.cc/150?img=1">
-
-    <div class="info">
-        <div class="nome">Grupo Elite</div>
-        <div class="desc">Comunidade ativa e exclusiva</div>
-    </div>
-
-    <div class="status ativo"></div>
-
-    <button class="btn" onclick="entrar('Grupo Elite')">
-        Entrar
-    </button>
+<div id="lista-grupos">
+    <p id="carregando">Carregando grupos...</p>
 </div>
 
-<div class="card">
-    <img src="https://i.pravatar.cc/150?img=2">
+<script type="module">
+// Importação do Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <div class="info">
-        <div class="nome">Grupo Vip</div>
-        <div class="desc">Acesso restrito para membros selecionados</div>
-    </div>
+// Sua configuração do Firebase (Mesma do painel)
+const firebaseConfig = {
+    apiKey: "AIzaSyA18Evh4E-BCu2P7ipJE7wmRWrtcpcuL4c",
+    authDomain: "website-e6c83.firebaseapp.com",
+    projectId: "website-e6c83",
+    storageBucket: "website-e6c83.firebasestorage.app",
+    messagingSenderId: "1005197181047",
+    appId: "1:1005197181047:web:6e3821ed4658d068524672"
+};
 
-    <div class="status inativo"></div>
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    <button class="btn" onclick="entrar('Grupo Vip')">
-        Entrar
-    </button>
-</div>
+// Função para listar os grupos em tempo real
+function carregarGrupos() {
+    const listaDiv = document.getElementById("lista-grupos");
+    const q = query(collection(db, "grupos"));
 
-<script>
-function entrar(nome){
-    alert("Entrando no " + nome + "...");
+    onSnapshot(q, (snap) => {
+        listaDiv.innerHTML = ""; // Limpa a lista antes de carregar
+
+        if (snap.empty) {
+            listaDiv.innerHTML = "<p style='text-align:center;'>Nenhum grupo disponível no momento.</p>";
+            return;
+        }
+
+        snap.forEach((doc) => {
+            const g = doc.data();
+            
+            // Criando o elemento do card
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+                <img src="${g.foto || 'https://via.placeholder.com/150'}">
+
+                <div class="info">
+                    <div class="nome">${g.nome}</div>
+                    <div class="desc">${g.membros} membros ativos</div>
+                </div>
+
+                <div class="status ${g.status}"></div>
+
+                <a href="${g.link}" target="_blank" class="btn">
+                    Entrar
+                </a>
+            `;
+
+            listaDiv.appendChild(card);
+        });
+    });
 }
+
+// Inicia a carga dos dados
+carregarGrupos();
 </script>
 
 </body>
