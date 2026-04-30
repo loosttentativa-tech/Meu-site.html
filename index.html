@@ -21,7 +21,6 @@ body{
   color:#fff;
 }
 
-/* brilho */
 body::before{
   content:"";
   position:fixed;
@@ -29,7 +28,6 @@ body::before{
   height:200%;
   background:linear-gradient(120deg,transparent,rgba(255,255,255,0.05),transparent);
   animation:shine 10s linear infinite;
-  pointer-events:none;
 }
 @keyframes shine{
   100%{transform:translateX(50%)}
@@ -76,7 +74,6 @@ body::before{
   border-radius:50%;
 }
 
-/* STATUS */
 .status{
   font-size:13px;
   color:var(--muted);
@@ -104,7 +101,6 @@ body::before{
   text-decoration:none;
 }
 
-/* ADMIN LIST */
 .admin-item{
   background:#111;
   padding:10px;
@@ -112,14 +108,8 @@ body::before{
   margin-bottom:10px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
 }
 
-.admin-actions button{
-  margin-left:5px;
-}
-
-/* FORM */
 input,textarea,select{
   width:100%;
   padding:10px;
@@ -128,6 +118,15 @@ input,textarea,select{
   border:1px solid #222;
   background:#000;
   color:#fff;
+}
+
+/* preview */
+#preview{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  display:none;
+  margin-bottom:10px;
 }
 
 /* LOGIN */
@@ -173,7 +172,13 @@ input,textarea,select{
 
   <input id="name" placeholder="Nome">
   <input id="members" placeholder="Membros">
-  <input id="img" placeholder="Imagem URL">
+
+  <!-- UPLOAD -->
+  <input type="file" id="imgFile" accept="image/*">
+  <img id="preview">
+
+  <input id="img" placeholder="OU cole URL da imagem">
+
   <input id="link" placeholder="Link WhatsApp">
   
   <select id="status">
@@ -186,7 +191,6 @@ input,textarea,select{
   <button id="save" class="btn">Salvar</button>
 </div>
 
-<!-- LISTA -->
 <div id="list" class="grid"></div>
 
 </div>
@@ -202,12 +206,29 @@ input,textarea,select{
 
 <script>
 const PW="1234";
-const KEY="groups_v4";
+const KEY="groups_v5";
 
 let groups=JSON.parse(localStorage.getItem(KEY))||[];
 let editIndex=null;
+let uploadedImage="";
 
 const $=e=>document.querySelector(e);
+
+/* UPLOAD */
+$("#imgFile").addEventListener("change", function(){
+  const file=this.files[0];
+  if(!file) return;
+
+  const reader=new FileReader();
+
+  reader.onload=function(e){
+    uploadedImage=e.target.result;
+    $("#preview").src=uploadedImage;
+    $("#preview").style.display="block";
+  };
+
+  reader.readAsDataURL(file);
+});
 
 /* LOGIN */
 const modal=$("#loginModal");
@@ -218,8 +239,6 @@ $("#doLogin").onclick=()=>{
   if($("#pass").value===PW){
     modal.classList.remove("show");
     $("#admin").style.display="block";
-    $("#login").style.display="none";
-    $("#logout").style.display="inline-block";
   }else{
     $("#erro").style.display="block";
   }
@@ -227,15 +246,13 @@ $("#doLogin").onclick=()=>{
 
 $("#logout").onclick=()=>{
   $("#admin").style.display="none";
-  $("#login").style.display="inline-block";
-  $("#logout").style.display="none";
 };
 
 modal.onclick=(e)=>{
   if(e.target===modal) modal.classList.remove("show");
 };
 
-/* VALIDAR LINK */
+/* VALIDAR */
 function validLink(link){
   return link.includes("chat.whatsapp.com");
 }
@@ -248,7 +265,6 @@ function render(){
   groups.forEach((g,i)=>{
     const isActive=g.status==="ativo";
 
-    /* público */
     $("#list").innerHTML+=`
     <div class="card">
       <img src="${g.img}">
@@ -267,11 +283,10 @@ function render(){
     </div>
     `;
 
-    /* admin */
     $("#adminList").innerHTML+=`
     <div class="admin-item">
       <span>${g.name}</span>
-      <div class="admin-actions">
+      <div>
         <button onclick="editGroup(${i})">Editar</button>
         <button onclick="deleteGroup(${i})">Remover</button>
       </div>
@@ -285,17 +300,17 @@ $("#save").onclick=()=>{
   let data={
     name:$("#name").value,
     members:$("#members").value,
-    img:$("#img").value,
+    img: uploadedImage || $("#img").value,
     link:$("#link").value,
     status:$("#status").value,
     desc:$("#desc").value
   };
 
   if(!validLink(data.link)){
-    return alert("Link inválido do WhatsApp");
+    return alert("Link inválido");
   }
 
-  if(editIndex !== null){
+  if(editIndex!==null){
     groups[editIndex]=data;
     editIndex=null;
   }else{
@@ -336,6 +351,9 @@ function clearForm(){
   $("#img").value="";
   $("#link").value="";
   $("#desc").value="";
+  uploadedImage="";
+  $("#preview").style.display="none";
+  $("#imgFile").value="";
 }
 
 render();
