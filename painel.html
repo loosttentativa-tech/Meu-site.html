@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -125,13 +126,13 @@ img{
 }
 
 /* AUTH BOX */
-#auth{
+#authDiv{
     text-align:center;
     margin-bottom:20px;
 }
 
 /* PAINEL */
-#painel{
+#painelDiv{
     text-align:center;
 }
 </style>
@@ -141,8 +142,7 @@ img{
 
 <h1>Painel</h1>
 
-<!-- LOGIN -->
-<div id="auth">
+<div id="authDiv">
   <input id="email" placeholder="Email">
   <input id="senha" type="password" placeholder="Senha">
   <br>
@@ -150,8 +150,7 @@ img{
   <button onclick="registrar()">Registrar</button>
 </div>
 
-<!-- PAINEL -->
-<div id="painel" style="display:none;">
+<div id="painelDiv" style="display:none;">
 
   <p id="userInfo"></p>
   <button onclick="logout()">Sair</button>
@@ -220,18 +219,27 @@ function linkValido(url){
 }
 
 window.registrar = async()=>{
-  const email = email.value;
-  const senha = senha.value;
-  await createUserWithEmailAndPassword(auth,email,senha);
+  const emailVal = document.getElementById("email").value;
+  const senhaVal = document.getElementById("senha").value;
+  try {
+    await createUserWithEmailAndPassword(auth, emailVal, senhaVal);
+    alert("Conta criada com sucesso!");
+  } catch (e) {
+    alert("Erro ao registrar: " + e.message);
+  }
 };
 
 window.login = async()=>{
-  const email = email.value;
-  const senha = senha.value;
-  await signInWithEmailAndPassword(auth,email,senha);
+  const emailVal = document.getElementById("email").value;
+  const senhaVal = document.getElementById("senha").value;
+  try {
+    await signInWithEmailAndPassword(auth, emailVal, senhaVal);
+  } catch (e) {
+    alert("Erro ao entrar: " + e.message);
+  }
 };
 
-window.logout = ()=>signOut(auth);
+window.logout = () => signOut(auth);
 
 window.addGrupo = async()=>{
   if(!user) return;
@@ -244,80 +252,90 @@ window.addGrupo = async()=>{
 
   if(!linkValido(link)) return alert("Link inválido");
 
-  await addDoc(collection(db,"grupos"),{
-    nome,foto,
-    membros:Number(membros),
-    status,link,
-    owner:user.uid
-  });
+  try {
+    await addDoc(collection(db,"grupos"),{
+      nome, foto,
+      membros:Number(membros),
+      status, link,
+      owner:user.uid
+    });
+    alert("Grupo adicionado!");
+  } catch (e) {
+    alert("Erro ao salvar: " + e.message);
+  }
 };
 
-onAuthStateChanged(auth,u=>{
+onAuthStateChanged(auth, u=>{
+  const authDiv = document.getElementById("authDiv");
+  const painelDiv = document.getElementById("painelDiv");
+  const userInfo = document.getElementById("userInfo");
+
   if(u){
-    user=u;
-    auth.style.display="none";
-    painel.style.display="block";
-    userInfo.innerText="Logado: "+u.email;
+    user = u;
+    authDiv.style.display = "none";
+    painelDiv.style.display = "block";
+    userInfo.innerText = "Logado: " + u.email;
     carregar();
   } else {
-    user=null;
-    auth.style.display="block";
-    painel.style.display="none";
+    user = null;
+    authDiv.style.display = "block";
+    painelDiv.style.display = "none";
   }
 });
 
 function carregar(){
-  const lista=document.getElementById("lista");
+  const lista = document.getElementById("lista");
+  const q = query(collection(db,"grupos"), where("owner", "==", user.uid));
 
-  const q=query(collection(db,"grupos"),where("owner","==",user.uid));
-
-  onSnapshot(q,snap=>{
-    lista.innerHTML="";
-
-    snap.forEach(d=>{
-      const g=d.data();
-
-      const div=document.createElement("div");
-      div.className="card";
-
-      div.innerHTML=`
+  onSnapshot(q, snap => {
+    lista.innerHTML = "";
+    snap.forEach(d => {
+      const g = d.data();
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `
         <img src="${g.foto}">
-        <div>
+        <div style="flex:1; text-align:left;">
           <b>${g.nome}</b>
           <span class="status ${g.status}"></span><br>
           <small>${g.membros} membros</small>
         </div>
-
-        <a class="enter" href="${g.link}" target="_blank">
-          Entrar
-        </a>
-
+        <a class="enter" href="${g.link}" target="_blank">Entrar</a>
         <button onclick="editar('${d.id}')">Editar</button>
         <button onclick="remover('${d.id}')">Excluir</button>
       `;
-
       lista.appendChild(div);
     });
   });
 }
 
-window.remover = async(id)=>{
-  await deleteDoc(doc(db,"grupos",id));
+window.remover = async(id) => {
+  if(confirm("Deseja excluir este grupo?")) {
+    await deleteDoc(doc(db, "grupos", id));
+  }
 };
 
-window.editar = async(id)=>{
-  const nome = prompt("Novo nome:");
-  const link = prompt("Novo link:");
+window.editar = async(id) => {
+  const novoNome = prompt("Novo nome:");
+  const novoLink = prompt("Novo link:");
 
-  if(link && !linkValido(link)){
+  if(novoLink && !linkValido(novoLink)){
     alert("Link inválido");
     return;
   }
 
-  await updateDoc(doc(db,"grupos",id),{nome,link});
+  const updates = {};
+  if(novoNome) updates.nome = novoNome;
+  if(novoLink) updates.link = novoLink;
+
+  if(Object.keys(updates).length > 0) {
+    await updateDoc(doc(db, "grupos", id), updates);
+  }
 };
 
 </script>
 
 </body>
 </html>
+
+```
