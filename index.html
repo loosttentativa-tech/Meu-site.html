@@ -1,374 +1,303 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ENGAJA ELITE</title>
-<link rel="icon" href="https://storageblack.cloud/midia/1773117490092.jpg">
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENGAJA ELITE — Admin</title>
 <meta name="description" content="Comunidade Engaja Elite — grupos de engajamento no WhatsApp.">
-
+<link rel="icon" href="https://storageblack.cloud/midia/1773117490092.jpg">
 <style>
-:root{--bg:#050505;--card-bg:rgba(20,20,20,0.8);--gold:gold;--muted:#777}
+:root{--bg:#050505;--card-bg:rgba(20,20,20,0.85);--gold:gold;--muted:#777}
 *{box-sizing:border-box}
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: #fff;
-    overflow-x: hidden;
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
-}
-
-/* LOADER */
-.loader {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    transition: opacity .5s ease;
-}
-
-.loader h1 {
-    font-size: 30px;
-    letter-spacing: 4px;
-    background: linear-gradient(90deg, var(--gold), white, var(--gold));
-    background-size: 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: brilho 2s linear infinite;
-}
-
-@keyframes brilho {
-    0% { background-position: 0%; }
-    100% { background-position: 200%; }
-}
-
-/* FUNDO */
-body::before {
-    content: "";
-    position: fixed;
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(circle, rgba(255,215,0,0.05), transparent 60%);
-    animation: girarBg 25s linear infinite;
-    z-index: -1;
-}
-
-@keyframes girarBg { 100% { transform: rotate(360deg); } }
-
-/* PARTÍCULAS */
-.bg span {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 10px gold;
-    animation: subir linear infinite;
-}
-
-@keyframes subir {
-    0% { transform: translateY(100vh); opacity: 0; }
-    20% { opacity: 1; }
-    100% { transform: translateY(-10vh); opacity: 0; }
-}
-
-/* CENTRAL */
-.wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-
-/* CARD */
-.container {
-    width: 90%;
-    max-width: 360px;
-    padding: 25px;
-    border-radius: 20px;
-    background: var(--card-bg);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.05);
-    text-align: center;
-    animation: entrar 1.2s ease;
-}
-
-@keyframes entrar {
-  from { opacity:0; transform: translateY(80px) scale(0.9); filter: blur(10px); }
-  to   { opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
-}
-
-/* TABS */
-.tabs {
-    display: flex;
-    margin-bottom: 15px;
-    gap: 6px;
-}
-
-.tab {
-    flex: 1;
-    padding: 10px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: 0.3s;
-    user-select: none;
-}
-
-.tab[aria-selected="true"] {
-    border-color: var(--gold);
-    color: var(--gold);
-}
-
-/* CONTEÚDO */
-.content {
-    display: none;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: 0.4s;
-}
-
-.content[data-active="true"] {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* IMAGEM */
-.group-img {
-    width: 110px;
-    height: 110px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin: 10px auto;
-    display: block;
-}
-
-/* BOTÕES */
-.btn {
-    position: relative;
-    display: inline-block;
-    margin: 12px 0 10px;
-    padding: 12px;
-    border-radius: 12px;
-    background: #111;
-    color: #fff;
-    text-decoration: none;
-    overflow: hidden;
-    transition: transform 0.18s ease;
-    border: none;
-    cursor: pointer;
-    font: inherit;
-}
-
-.btn:hover { transform: scale(1.06); }
-.btn:active { transform: scale(0.95); }
-
-/* GLOW */
-.imperio { box-shadow: 0 0 10px gold; }
-.diamond { box-shadow: 0 0 10px white; }
-
-/* INFO GRUPO */
-.grupo-info {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: 0.4s;
-    background: rgba(255,255,255,0.03);
-    border-radius: 12px;
-    padding: 0 10px;
-    margin-bottom: 10px;
-}
-
-.grupo-info[aria-hidden="false"] {
-    max-height: 300px;
-    opacity: 1;
-    padding: 10px;
-}
-
-/* STATUS */
-.status { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
-.status.on { background: #00ff88; box-shadow: 0 0 8px #00ff88; }
-
-/* BOTÃO ENTRAR */
-.entrar {
-    background: linear-gradient(45deg, gold, #222);
-    font-weight: bold;
-}
-
-/* FOOTER */
-.footer { font-size: 12px; color: var(--muted); margin-top:8px; }
-
-/* Foco visível */
-.btn:focus, .tab:focus, a:focus { outline: 3px solid rgba(255,215,0,0.25); outline-offset:4px; }
-
-/* Small screens: reduce particles size */
-@media (max-width:600px){
-  .bg span { width:2px; height:2px; box-shadow: none; }
-}
+body{margin:0;font-family:Segoe UI,system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:#fff;min-height:100vh}
+.container{max-width:980px;margin:24px auto;padding:20px;border-radius:12px;background:var(--card-bg);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.04)}
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+h1{margin:0;font-size:20px}
+.grid{display:grid;grid-template-columns:1fr 360px;gap:20px;margin-top:18px}
+.card{padding:14px;border-radius:10px;background:rgba(0,0,0,0.15)}
+.group-list{display:flex;flex-direction:column;gap:10px}
+.group-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02)}
+.group-item img{width:56px;height:56px;border-radius:8px;object-fit:cover}
+.btn{background:#111;padding:8px 10px;border-radius:8px;color:#fff;border:none;cursor:pointer}
+.btn.warn{background:#b32}
+.btn.primary{background:linear-gradient(45deg,var(--gold),#666);color:#000;font-weight:600}
+.form-row{display:flex;flex-direction:column;margin-bottom:8px}
+label{font-size:13px;margin-bottom:6px;color:#ddd}
+input[type="text"],input[type="url"],input[type="number"],select,textarea{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff}
+textarea{min-height:80px;resize:vertical}
+.controls{display:flex;gap:8px;flex-wrap:wrap}
+.small{font-size:13px;color:var(--muted)}
+.notice{font-size:13px;color:#ccc;margin-top:8px}
+.footer{margin-top:14px;font-size:12px;color:var(--muted)}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.group-item img{width:48px;height:48px}}
 </style>
 </head>
-
 <body>
 
-<div class="loader" aria-hidden="false" id="page-loader">
-    <h1>ENGAJA ELITE</h1>
-</div>
-
-<div class="bg" aria-hidden="true"></div>
-
-<div class="wrapper">
-  <div class="container" role="region" aria-labelledby="site-title">
-
-    <h2 id="site-title">👑 ENGAJA ELITE</h2>
-
-    <div class="tabs" role="tablist" aria-label="Seções">
-      <div class="tab" role="tab" id="tab-grupos" tabindex="0" aria-selected="true" data-index="0">Grupos</div>
-      <div class="tab" role="tab" id="tab-parceria" tabindex="0" aria-selected="false" data-index="1">Parceria</div>
+<div class="container">
+  <div class="header">
+    <h1>ENGAJA ELITE — Painel ADM</h1>
+    <div>
+      <button id="btn-open-admin" class="btn primary">Entrar no ADM</button>
+      <button id="btn-logout" class="btn" style="display:none">Sair</button>
     </div>
+  </div>
 
-    <!-- GRUPOS -->
-    <div class="content" role="tabpanel" id="content-grupos" aria-labelledby="tab-grupos" data-active="true">
+  <div id="admin-area" style="display:none; margin-top:14px;">
+    <div class="grid">
+      <!-- Lista de grupos -->
+      <div class="card">
+        <strong>Grupos</strong>
+        <div id="groups" class="group-list" style="margin-top:10px;"></div>
+        <div class="notice">Clique em Editar para editar ou Remover para excluir. Alterações são salvas localmente (localStorage).</div>
+      </div>
 
-        <!-- DIAMOND -->
-        <img class="group-img" src="https://storageblack.cloud/midia/1777330978711.jpg" alt="Imagem do grupo Engaja Diamond" loading="lazy" width="110" height="110">
-        <button class="btn diamond" type="button" data-target="diamond" aria-expanded="false">💎 ENGAJA DIAMOND</button>
+      <!-- Form CRUD -->
+      <div class="card">
+        <strong id="form-title">Adicionar novo grupo</strong>
+        <div style="height:10px"></div>
 
-        <div id="diamond" class="grupo-info" role="region" aria-labelledby="diamond-toggle" aria-hidden="true">
-            <p><strong>Grupo:</strong> ⊹ ࣪ ˖ 𖦹 ‧💎 𝐄𝐍𝐆𝐀𝐉𝐀 𝐃𝐈𝐀𝐌𝐎𝐍𝐃 💎 ² 𖦹 ‧ ˖ ࣪⊹</p>
-            <p><strong>Membros:</strong> 180+</p>
-            <p><span class="status on" aria-hidden="true"></span> Grupo ativo</p>
-            <p><span class="status on" aria-hidden="true"></span> Bot ativo</p>
-
-            <a class="btn entrar" href="https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4" target="_blank" rel="noopener noreferrer">🚀 ENTRAR AGORA</a>
+        <div class="form-row">
+          <label for="g-name">Nome</label>
+          <input id="g-name" type="text" placeholder="Ex: ENGAJA DIAMOND">
         </div>
 
-        <!-- IMPÉRIO -->
-        <img class="group-img" src="https://storageblack.cloud/midia/1777331201682.jpg" alt="Imagem do grupo Engaja Império" loading="lazy" width="110" height="110">
-        <button class="btn imperio" type="button" data-target="imperio" aria-expanded="false">🔱 ENGAJA IMPÉRIO</button>
-
-        <div id="imperio" class="grupo-info" role="region" aria-labelledby="imperio-toggle" aria-hidden="true">
-            <p><strong>Grupo:</strong> ⊹ ࣪ ˖ 𖦹 ‧🔱 𝐄𝐍𝐆𝐀𝐉𝐀 𝐈𝐌𝐏É𝐑𝐈𝐎 🔱 ¹ 𖦹 ‧ ˖ ࣪⊹</p>
-            <p><strong>Membros:</strong> 180+</p>
-            <p><span class="status on" aria-hidden="true"></span> Grupo ativo</p>
-            <p><span class="status on" aria-hidden="true"></span> Bot ativo</p>
-
-            <a class="btn entrar" href="https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU" target="_blank" rel="noopener noreferrer">🚀 ENTRAR AGORA</a>
+        <div class="form-row">
+          <label for="g-members">Membros (texto)</label>
+          <input id="g-members" type="text" placeholder="Ex: 180+">
         </div>
 
-    </div>
+        <div class="form-row">
+          <label for="g-img">URL da imagem</label>
+          <input id="g-img" type="url" placeholder="https://...">
+        </div>
 
-    <!-- PARCERIA -->
-    <div class="content" role="tabpanel" id="content-parceria" aria-labelledby="tab-parceria" data-active="false">
-        <p>Quer fazer parceria com meus grupos?</p>
-        <a class="btn parceria" href="https://wa.me/557588379574" target="_blank" rel="noopener noreferrer">🤝 fale comigo</a>
+        <div class="form-row">
+          <label for="g-link">Link do WhatsApp</label>
+          <input id="g-link" type="url" placeholder="https://chat.whatsapp.com/...">
+        </div>
+
+        <div class="form-row">
+          <label for="g-status">Status</label>
+          <select id="g-status">
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="g-desc">Descrição curta</label>
+          <textarea id="g-desc" placeholder="Descrição exibida no card"></textarea>
+        </div>
+
+        <div class="controls">
+          <button id="btn-save" class="btn primary">Salvar</button>
+          <button id="btn-clear" class="btn">Limpar</button>
+        </div>
+
+        <div style="height:8px"></div>
+        <div class="small">Observação: este ADM é local (client-side). Para multiusuário/multi-dispositivo, integre um backend (ex.: Firebase).</div>
+      </div>
     </div>
 
     <div class="footer">by: <a href="https://wa.me/marcos" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none">wa.me/marcos</a></div>
+  </div>
 
+  <!-- Área pública preview (opcional) -->
+  <div style="margin-top:18px" class="card">
+    <strong>Preview público</strong>
+    <div id="public-preview" style="margin-top:10px"></div>
   </div>
 </div>
 
 <script>
-/* Loader: remove on DOMContentLoaded */
-document.addEventListener("DOMContentLoaded", () => {
-  const loader = document.getElementById("page-loader");
-  if(loader){
-    loader.style.opacity = "0";
-    setTimeout(() => loader.remove(), 500);
+/* ------- Configurações ADM ------- */
+const ADMIN_PW = "sua-senha-aqui"; // mude para uma senha forte se usar local
+const STORAGE_KEY = "engaja_groups_v1";
+
+/* ------- Utilitário ------- */
+function $(sel){return document.querySelector(sel)}
+function saveGroups(list){localStorage.setItem(STORAGE_KEY, JSON.stringify(list))}
+function loadGroups(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultGroups(); } catch(e){ return defaultGroups(); } }
+function defaultGroups(){
+  return [
+    {id: genId(), name:"ENGAJA DIAMOND", members:"180+", img:"https://storageblack.cloud/midia/1777330978711.jpg", link:"https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4", status:"ativo", desc:"⊹ ࣪ ˖ 𖦹 ‧💎 ENGAJA DIAMOND 💎"},
+    {id: genId(), name:"ENGAJA IMPÉRIO", members:"180+", img:"https://storageblack.cloud/midia/1777331201682.jpg", link:"https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU", status:"ativo", desc:"⊹ ࣪ ˖ 𖦹 ‧🔱 ENGAJA IMPÉRIO 🔱"}
+  ];
+}
+function genId(){ return 'g_'+Math.random().toString(36).slice(2,9) }
+
+/* ------- Estado ------- */
+let groups = loadGroups();
+let editingId = null;
+
+/* ------- DOM refs ------- */
+const btnOpen = $('#btn-open-admin');
+const btnLogout = $('#btn-logout');
+const adminArea = $('#admin-area');
+const groupsEl = $('#groups');
+const previewEl = $('#public-preview');
+
+const fld = {
+  name: $('#g-name'),
+  members: $('#g-members'),
+  img: $('#g-img'),
+  link: $('#g-link'),
+  status: $('#g-status'),
+  desc: $('#g-desc'),
+};
+const btnSave = $('#btn-save');
+const btnClear = $('#btn-clear');
+const formTitle = $('#form-title');
+
+/* ------- Auth simples (cliente) ------- */
+btnOpen.addEventListener('click', ()=>{
+  const pw = prompt("Senha ADM:");
+  if(pw === ADMIN_PW){
+    showAdmin(true);
+  } else {
+    alert("Senha incorreta.");
   }
 });
+btnLogout.addEventListener('click', ()=> showAdmin(false));
 
-/* Partículas: adapta quantidade por largura */
-(function generateParticles(){
-  const bg = document.querySelector(".bg");
-  if(!bg) return;
-  const count = window.innerWidth < 600 ? 8 : 25;
-  for(let i=0;i<count;i++){
-    const span = document.createElement("span");
-    span.style.left = Math.random()*100 + "%";
-    span.style.top = Math.random()*100 + "%";
-    span.style.animationDuration = (5 + Math.random()*5) + "s";
-    bg.appendChild(span);
+function showAdmin(on){
+  if(on){
+    adminArea.style.display = "block";
+    btnOpen.style.display = "none";
+    btnLogout.style.display = "inline-block";
+  } else {
+    adminArea.style.display = "none";
+    btnOpen.style.display = "inline-block";
+    btnLogout.style.display = "none";
+    clearForm();
   }
-})();
+}
 
-/* Tabs keyboard + click handling */
-(function initTabs(){
-  const tabs = Array.from(document.querySelectorAll(".tab"));
-  const panels = {
-    0: document.getElementById("content-grupos"),
-    1: document.getElementById("content-parceria")
+/* ------- Render lista e preview ------- */
+function renderList(){
+  groupsEl.innerHTML = "";
+  groups.forEach(g=>{
+    const div = document.createElement("div");
+    div.className = "group-item";
+    div.innerHTML = `
+      <img src="${escapeHtml(g.img||'')}" alt="${escapeHtml(g.name)}" loading="lazy">
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <strong>${escapeHtml(g.name)}</strong>
+            <div class="small">${escapeHtml(g.members)} • ${escapeHtml(g.status)}</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn" data-id="${g.id}" data-action="edit">Editar</button>
+            <button class="btn warn" data-id="${g.id}" data-action="remove">Remover</button>
+          </div>
+        </div>
+        <div class="small" style="margin-top:6px">${escapeHtml(g.desc||'')}</div>
+      </div>
+    `;
+    groupsEl.appendChild(div);
+  });
+
+  // delegação de eventos
+  groupsEl.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click', (e)=>{
+      const id = b.dataset.id;
+      const action = b.dataset.action;
+      if(action==='edit') editGroup(id);
+      if(action==='remove') removeGroup(id);
+    });
+  });
+
+  renderPreview();
+}
+
+function renderPreview(){
+  previewEl.innerHTML = "";
+  groups.forEach(g=>{
+    const d = document.createElement("div");
+    d.className = "group-item";
+    d.style.marginBottom = "8px";
+    d.innerHTML = `
+      <img src="${escapeHtml(g.img||'')}" alt="${escapeHtml(g.name)}">
+      <div style="flex:1">
+        <strong>${escapeHtml(g.name)}</strong>
+        <div class="small">${escapeHtml(g.members)} • ${escapeHtml(g.status)}</div>
+        <div class="small" style="margin-top:6px">${escapeHtml(g.desc||'')}</div>
+        <div style="margin-top:8px"><a class="btn entrar" href="${escapeHtml(g.link||'#')}" target="_blank" rel="noopener noreferrer">Entrar</a></div>
+      </div>
+    `;
+    previewEl.appendChild(d);
+  });
+}
+
+/* ------- CRUD actions ------- */
+btnSave.addEventListener('click', ()=>{
+  const data = {
+    name: fld.name.value.trim() || 'Sem nome',
+    members: fld.members.value.trim() || '',
+    img: fld.img.value.trim() || '',
+    link: fld.link.value.trim() || '',
+    status: fld.status.value,
+    desc: fld.desc.value.trim()
   };
 
-  function activate(index){
-    tabs.forEach((t,i)=>{
-      const selected = i === index;
-      t.setAttribute("aria-selected", selected ? "true" : "false");
-      t.tabIndex = selected ? 0 : -1;
-      panels[i].setAttribute("data-active", selected ? "true" : "false");
-    });
+  if(editingId){
+    const idx = groups.findIndex(x=>x.id===editingId);
+    if(idx>-1){ groups[idx] = {...groups[idx], ...data}; }
+    editingId = null;
+  } else {
+    groups.unshift({...data, id: genId()});
   }
+  saveGroups(groups);
+  renderList();
+  clearForm();
+});
 
-  tabs.forEach((tab, i) => {
-    tab.addEventListener("click", ()=> activate(i));
-    tab.addEventListener("keydown", (e)=>{
-      if(e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(i); }
-      if(e.key === "ArrowRight") { e.preventDefault(); activate((i+1)%tabs.length); tabs[(i+1)%tabs.length].focus(); }
-      if(e.key === "ArrowLeft") { e.preventDefault(); activate((i-1+tabs.length)%tabs.length); tabs[(i-1+tabs.length)%tabs.length].focus(); }
-    });
-  });
+btnClear.addEventListener('click', clearForm);
 
-  // initial state
-  activate(0);
-})();
+function editGroup(id){
+  const g = groups.find(x=>x.id===id);
+  if(!g) return;
+  editingId = id;
+  formTitle.textContent = "Editar grupo";
+  fld.name.value = g.name;
+  fld.members.value = g.members;
+  fld.img.value = g.img;
+  fld.link.value = g.link;
+  fld.status.value = g.status;
+  fld.desc.value = g.desc;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
-/* Grupo toggles: use buttons, ARIA updates, single open */
-(function initGroupToggles(){
-  const toggles = Array.from(document.querySelectorAll("button[data-target]"));
-  const groups = Array.from(document.querySelectorAll(".grupo-info"));
+function removeGroup(id){
+  if(!confirm("Remover este grupo?")) return;
+  groups = groups.filter(x=>x.id!==id);
+  saveGroups(groups);
+  renderList();
+  if(editingId===id) clearForm();
+}
 
-  function closeAll(){
-    groups.forEach(g => {
-      g.setAttribute("aria-hidden","true");
-      g.classList.remove("active");
-    });
-    toggles.forEach(t => t.setAttribute("aria-expanded","false"));
-  }
+function clearForm(){
+  editingId = null;
+  formTitle.textContent = "Adicionar novo grupo";
+  fld.name.value = "";
+  fld.members.value = "";
+  fld.img.value = "";
+  fld.link.value = "";
+  fld.status.value = "ativo";
+  fld.desc.value = "";
+}
 
-  toggles.forEach(btn => {
-    const target = document.getElementById(btn.dataset.target);
-    btn.addEventListener("click", ()=>{
-      const isOpen = target.getAttribute("aria-hidden") === "false";
-      if(isOpen){
-        target.setAttribute("aria-hidden","true");
-        btn.setAttribute("aria-expanded","false");
-      } else {
-        closeAll();
-        target.setAttribute("aria-hidden","false");
-        btn.setAttribute("aria-expanded","true");
-      }
-    });
-    btn.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" || e.key === " ") { e.preventDefault(); btn.click(); }
-    });
-  });
+/* ------- Helpers ------- */
+function escapeHtml(s){ if(!s) return ''; return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;') }
 
-  // ensure initial collapsed
-  closeAll();
-})();
+/* Inicialização */
+renderList();
 
-/* Optional: graceful degradation if JS disabled
-   (CSS already shows content if data-active not set, but we rely on JS for toggles) */
+/* Se quiser habilitar ADM automaticamente durante dev, descomente:
+showAdmin(true);
+*/
 </script>
-
 </body>
 </html>
