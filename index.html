@@ -1,303 +1,320 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ENGAJA ELITE — Admin</title>
-<meta name="description" content="Comunidade Engaja Elite — grupos de engajamento no WhatsApp.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENGAJA ELITE — ADM</title>
+
 <link rel="icon" href="https://storageblack.cloud/midia/1773117490092.jpg">
+
 <style>
-:root{--bg:#050505;--card-bg:rgba(20,20,20,0.85);--gold:gold;--muted:#777}
+:root{
+  --bg:#050505;
+  --gold:#FFD700;
+  --card:#111;
+  --glow:0 0 12px rgba(255,215,0,0.4);
+}
+
 *{box-sizing:border-box}
-body{margin:0;font-family:Segoe UI,system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:#fff;min-height:100vh}
-.container{max-width:980px;margin:24px auto;padding:20px;border-radius:12px;background:var(--card-bg);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.04)}
-.header{display:flex;justify-content:space-between;align-items:center;gap:12px}
-h1{margin:0;font-size:20px}
-.grid{display:grid;grid-template-columns:1fr 360px;gap:20px;margin-top:18px}
-.card{padding:14px;border-radius:10px;background:rgba(0,0,0,0.15)}
-.group-list{display:flex;flex-direction:column;gap:10px}
-.group-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02)}
-.group-item img{width:56px;height:56px;border-radius:8px;object-fit:cover}
-.btn{background:#111;padding:8px 10px;border-radius:8px;color:#fff;border:none;cursor:pointer}
-.btn.warn{background:#b32}
-.btn.primary{background:linear-gradient(45deg,var(--gold),#666);color:#000;font-weight:600}
-.form-row{display:flex;flex-direction:column;margin-bottom:8px}
-label{font-size:13px;margin-bottom:6px;color:#ddd}
-input[type="text"],input[type="url"],input[type="number"],select,textarea{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff}
-textarea{min-height:80px;resize:vertical}
-.controls{display:flex;gap:8px;flex-wrap:wrap}
-.small{font-size:13px;color:var(--muted)}
-.notice{font-size:13px;color:#ccc;margin-top:8px}
-.footer{margin-top:14px;font-size:12px;color:var(--muted)}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.group-item img{width:48px;height:48px}}
+
+body{
+  margin:0;
+  font-family:Segoe UI, sans-serif;
+  background: radial-gradient(circle at top,#111,#050505);
+  color:#fff;
+}
+
+/* LOADER */
+.loader{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#000;
+  z-index:9999;
+  animation:fadeOut 1s ease 2s forwards;
+}
+.loader h1{
+  color:var(--gold);
+  letter-spacing:3px;
+  animation:pulse 1.5s infinite;
+}
+@keyframes pulse{
+  0%{opacity:0.4}
+  50%{opacity:1}
+  100%{opacity:0.4}
+}
+@keyframes fadeOut{
+  to{opacity:0;visibility:hidden}
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* BOTÕES */
+.btn{
+  padding:10px 14px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  background:#111;
+  color:#fff;
+  transition:.3s;
+}
+
+.btn.primary{
+  background:linear-gradient(45deg,var(--gold),#aaa);
+  color:#000;
+  box-shadow:var(--glow);
+}
+
+.btn:hover{
+  transform:scale(1.05);
+  box-shadow:var(--glow);
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 350px;
+  gap:20px;
+  margin-top:20px;
+}
+
+.card{
+  background:rgba(255,255,255,0.03);
+  padding:15px;
+  border-radius:12px;
+  border:1px solid rgba(255,215,0,0.15);
+  backdrop-filter:blur(6px);
+}
+
+/* LISTA */
+.group-item{
+  display:flex;
+  gap:10px;
+  padding:10px;
+  border-radius:10px;
+  transition:.3s;
+}
+.group-item:hover{
+  background:rgba(255,255,255,0.05);
+  transform:scale(1.02);
+}
+
+.group-item img{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+/* FORM */
+input,select,textarea{
+  width:100%;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #333;
+  background:#000;
+  color:#fff;
+  margin-bottom:8px;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#111;
+  padding:12px 16px;
+  border-radius:8px;
+  box-shadow:var(--glow);
+  opacity:0;
+  transform:translateY(20px);
+  transition:.3s;
+}
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* RESPONSIVO */
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}
+}
 </style>
 </head>
+
 <body>
 
+<div class="loader">
+  <h1>ENGAJA ELITE</h1>
+</div>
+
 <div class="container">
-  <div class="header">
-    <h1>ENGAJA ELITE — Painel ADM</h1>
-    <div>
-      <button id="btn-open-admin" class="btn primary">Entrar no ADM</button>
-      <button id="btn-logout" class="btn" style="display:none">Sair</button>
-    </div>
-  </div>
 
-  <div id="admin-area" style="display:none; margin-top:14px;">
-    <div class="grid">
-      <!-- Lista de grupos -->
-      <div class="card">
-        <strong>Grupos</strong>
-        <div id="groups" class="group-list" style="margin-top:10px;"></div>
-        <div class="notice">Clique em Editar para editar ou Remover para excluir. Alterações são salvas localmente (localStorage).</div>
-      </div>
-
-      <!-- Form CRUD -->
-      <div class="card">
-        <strong id="form-title">Adicionar novo grupo</strong>
-        <div style="height:10px"></div>
-
-        <div class="form-row">
-          <label for="g-name">Nome</label>
-          <input id="g-name" type="text" placeholder="Ex: ENGAJA DIAMOND">
-        </div>
-
-        <div class="form-row">
-          <label for="g-members">Membros (texto)</label>
-          <input id="g-members" type="text" placeholder="Ex: 180+">
-        </div>
-
-        <div class="form-row">
-          <label for="g-img">URL da imagem</label>
-          <input id="g-img" type="url" placeholder="https://...">
-        </div>
-
-        <div class="form-row">
-          <label for="g-link">Link do WhatsApp</label>
-          <input id="g-link" type="url" placeholder="https://chat.whatsapp.com/...">
-        </div>
-
-        <div class="form-row">
-          <label for="g-status">Status</label>
-          <select id="g-status">
-            <option value="ativo">Ativo</option>
-            <option value="inativo">Inativo</option>
-          </select>
-        </div>
-
-        <div class="form-row">
-          <label for="g-desc">Descrição curta</label>
-          <textarea id="g-desc" placeholder="Descrição exibida no card"></textarea>
-        </div>
-
-        <div class="controls">
-          <button id="btn-save" class="btn primary">Salvar</button>
-          <button id="btn-clear" class="btn">Limpar</button>
-        </div>
-
-        <div style="height:8px"></div>
-        <div class="small">Observação: este ADM é local (client-side). Para multiusuário/multi-dispositivo, integre um backend (ex.: Firebase).</div>
-      </div>
-    </div>
-
-    <div class="footer">by: <a href="https://wa.me/marcos" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none">wa.me/marcos</a></div>
-  </div>
-
-  <!-- Área pública preview (opcional) -->
-  <div style="margin-top:18px" class="card">
-    <strong>Preview público</strong>
-    <div id="public-preview" style="margin-top:10px"></div>
+<div class="header">
+  <h2>Painel ADM</h2>
+  <div>
+    <button id="login" class="btn primary">Entrar</button>
+    <button id="logout" class="btn" style="display:none">Sair</button>
   </div>
 </div>
 
+<div id="admin" style="display:none">
+
+<div class="grid">
+
+<div class="card">
+  <h3>Grupos</h3>
+  <div id="list"></div>
+</div>
+
+<div class="card">
+  <h3 id="formTitle">Novo Grupo</h3>
+
+  <input id="name" placeholder="Nome">
+  <input id="members" placeholder="Membros">
+  <input id="img" placeholder="Imagem URL">
+  <input id="link" placeholder="Link WhatsApp">
+  
+  <select id="status">
+    <option value="ativo">Ativo</option>
+    <option value="inativo">Inativo</option>
+  </select>
+
+  <textarea id="desc" placeholder="Descrição"></textarea>
+
+  <button id="save" class="btn primary">Salvar</button>
+</div>
+
+</div>
+
+</div>
+
+<div id="preview" class="card" style="margin-top:20px"></div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
 <script>
-/* ------- Configurações ADM ------- */
-const ADMIN_PW = "sua-senha-aqui"; // mude para uma senha forte se usar local
-const STORAGE_KEY = "engaja_groups_v1";
+const PW="1234";
+const KEY="groups_v2";
 
-/* ------- Utilitário ------- */
-function $(sel){return document.querySelector(sel)}
-function saveGroups(list){localStorage.setItem(STORAGE_KEY, JSON.stringify(list))}
-function loadGroups(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultGroups(); } catch(e){ return defaultGroups(); } }
-function defaultGroups(){
-  return [
-    {id: genId(), name:"ENGAJA DIAMOND", members:"180+", img:"https://storageblack.cloud/midia/1777330978711.jpg", link:"https://chat.whatsapp.com/LwMSLguzrxCDD9lrpl3bC4", status:"ativo", desc:"⊹ ࣪ ˖ 𖦹 ‧💎 ENGAJA DIAMOND 💎"},
-    {id: genId(), name:"ENGAJA IMPÉRIO", members:"180+", img:"https://storageblack.cloud/midia/1777331201682.jpg", link:"https://chat.whatsapp.com/BoAkDPaMuJG0VwU2vrlkWU", status:"ativo", desc:"⊹ ࣪ ˖ 𖦹 ‧🔱 ENGAJA IMPÉRIO 🔱"}
-  ];
+let groups=JSON.parse(localStorage.getItem(KEY))||[];
+let edit=null;
+
+const $=e=>document.querySelector(e);
+
+function toast(msg){
+  const t=$("#toast");
+  t.innerText=msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
 }
-function genId(){ return 'g_'+Math.random().toString(36).slice(2,9) }
 
-/* ------- Estado ------- */
-let groups = loadGroups();
-let editingId = null;
-
-/* ------- DOM refs ------- */
-const btnOpen = $('#btn-open-admin');
-const btnLogout = $('#btn-logout');
-const adminArea = $('#admin-area');
-const groupsEl = $('#groups');
-const previewEl = $('#public-preview');
-
-const fld = {
-  name: $('#g-name'),
-  members: $('#g-members'),
-  img: $('#g-img'),
-  link: $('#g-link'),
-  status: $('#g-status'),
-  desc: $('#g-desc'),
+$("#login").onclick=()=>{
+  if(prompt("Senha")==PW){
+    $("#admin").style.display="block";
+    $("#login").style.display="none";
+    $("#logout").style.display="inline-block";
+  }
 };
-const btnSave = $('#btn-save');
-const btnClear = $('#btn-clear');
-const formTitle = $('#form-title');
 
-/* ------- Auth simples (cliente) ------- */
-btnOpen.addEventListener('click', ()=>{
-  const pw = prompt("Senha ADM:");
-  if(pw === ADMIN_PW){
-    showAdmin(true);
-  } else {
-    alert("Senha incorreta.");
-  }
-});
-btnLogout.addEventListener('click', ()=> showAdmin(false));
+$("#logout").onclick=()=>{
+  $("#admin").style.display="none";
+  $("#login").style.display="inline-block";
+  $("#logout").style.display="none";
+};
 
-function showAdmin(on){
-  if(on){
-    adminArea.style.display = "block";
-    btnOpen.style.display = "none";
-    btnLogout.style.display = "inline-block";
-  } else {
-    adminArea.style.display = "none";
-    btnOpen.style.display = "inline-block";
-    btnLogout.style.display = "none";
-    clearForm();
-  }
-}
+function render(){
+  $("#list").innerHTML="";
+  $("#preview").innerHTML="";
 
-/* ------- Render lista e preview ------- */
-function renderList(){
-  groupsEl.innerHTML = "";
   groups.forEach(g=>{
-    const div = document.createElement("div");
-    div.className = "group-item";
-    div.innerHTML = `
-      <img src="${escapeHtml(g.img||'')}" alt="${escapeHtml(g.name)}" loading="lazy">
-      <div style="flex:1">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <strong>${escapeHtml(g.name)}</strong>
-            <div class="small">${escapeHtml(g.members)} • ${escapeHtml(g.status)}</div>
-          </div>
-          <div style="display:flex;gap:6px">
-            <button class="btn" data-id="${g.id}" data-action="edit">Editar</button>
-            <button class="btn warn" data-id="${g.id}" data-action="remove">Remover</button>
-          </div>
+    $("#list").innerHTML+=`
+      <div class="group-item">
+        <img src="${g.img}">
+        <div style="flex:1">
+          <b>${g.name}</b><br>
+          <small>${g.members} • ${g.status}</small><br>
+          <button onclick="editGroup('${g.id}')">Editar</button>
+          <button onclick="del('${g.id}')">Remover</button>
         </div>
-        <div class="small" style="margin-top:6px">${escapeHtml(g.desc||'')}</div>
       </div>
     `;
-    groupsEl.appendChild(div);
-  });
 
-  // delegação de eventos
-  groupsEl.querySelectorAll('button').forEach(b=>{
-    b.addEventListener('click', (e)=>{
-      const id = b.dataset.id;
-      const action = b.dataset.action;
-      if(action==='edit') editGroup(id);
-      if(action==='remove') removeGroup(id);
-    });
-  });
-
-  renderPreview();
-}
-
-function renderPreview(){
-  previewEl.innerHTML = "";
-  groups.forEach(g=>{
-    const d = document.createElement("div");
-    d.className = "group-item";
-    d.style.marginBottom = "8px";
-    d.innerHTML = `
-      <img src="${escapeHtml(g.img||'')}" alt="${escapeHtml(g.name)}">
-      <div style="flex:1">
-        <strong>${escapeHtml(g.name)}</strong>
-        <div class="small">${escapeHtml(g.members)} • ${escapeHtml(g.status)}</div>
-        <div class="small" style="margin-top:6px">${escapeHtml(g.desc||'')}</div>
-        <div style="margin-top:8px"><a class="btn entrar" href="${escapeHtml(g.link||'#')}" target="_blank" rel="noopener noreferrer">Entrar</a></div>
+    $("#preview").innerHTML+=`
+      <div class="group-item">
+        <img src="${g.img}">
+        <div>
+          <b>${g.name}</b><br>
+          <a href="${g.link}" target="_blank">Entrar</a>
+        </div>
       </div>
     `;
-    previewEl.appendChild(d);
   });
 }
 
-/* ------- CRUD actions ------- */
-btnSave.addEventListener('click', ()=>{
-  const data = {
-    name: fld.name.value.trim() || 'Sem nome',
-    members: fld.members.value.trim() || '',
-    img: fld.img.value.trim() || '',
-    link: fld.link.value.trim() || '',
-    status: fld.status.value,
-    desc: fld.desc.value.trim()
+$("#save").onclick=()=>{
+  let data={
+    id:edit||Date.now(),
+    name:$("#name").value,
+    members:$("#members").value,
+    img:$("#img").value,
+    link:$("#link").value,
+    status:$("#status").value,
+    desc:$("#desc").value
   };
 
-  if(editingId){
-    const idx = groups.findIndex(x=>x.id===editingId);
-    if(idx>-1){ groups[idx] = {...groups[idx], ...data}; }
-    editingId = null;
-  } else {
-    groups.unshift({...data, id: genId()});
+  if(!data.link.includes("chat.whatsapp.com")){
+    return alert("Link inválido");
   }
-  saveGroups(groups);
-  renderList();
-  clearForm();
-});
 
-btnClear.addEventListener('click', clearForm);
+  if(edit){
+    groups=groups.map(g=>g.id==edit?data:g);
+    edit=null;
+  }else{
+    groups.unshift(data);
+  }
+
+  localStorage.setItem(KEY,JSON.stringify(groups));
+  render();
+  toast("Salvo com sucesso 💎");
+};
 
 function editGroup(id){
-  const g = groups.find(x=>x.id===id);
-  if(!g) return;
-  editingId = id;
-  formTitle.textContent = "Editar grupo";
-  fld.name.value = g.name;
-  fld.members.value = g.members;
-  fld.img.value = g.img;
-  fld.link.value = g.link;
-  fld.status.value = g.status;
-  fld.desc.value = g.desc;
-  window.scrollTo({top:0,behavior:'smooth'});
+  let g=groups.find(x=>x.id==id);
+  edit=id;
+  $("#name").value=g.name;
+  $("#members").value=g.members;
+  $("#img").value=g.img;
+  $("#link").value=g.link;
+  $("#desc").value=g.desc;
 }
 
-function removeGroup(id){
-  if(!confirm("Remover este grupo?")) return;
-  groups = groups.filter(x=>x.id!==id);
-  saveGroups(groups);
-  renderList();
-  if(editingId===id) clearForm();
+function del(id){
+  if(confirm("Remover?")){
+    groups=groups.filter(g=>g.id!=id);
+    localStorage.setItem(KEY,JSON.stringify(groups));
+    render();
+    toast("Removido 🚫");
+  }
 }
 
-function clearForm(){
-  editingId = null;
-  formTitle.textContent = "Adicionar novo grupo";
-  fld.name.value = "";
-  fld.members.value = "";
-  fld.img.value = "";
-  fld.link.value = "";
-  fld.status.value = "ativo";
-  fld.desc.value = "";
-}
-
-/* ------- Helpers ------- */
-function escapeHtml(s){ if(!s) return ''; return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;') }
-
-/* Inicialização */
-renderList();
-
-/* Se quiser habilitar ADM automaticamente durante dev, descomente:
-showAdmin(true);
-*/
+render();
 </script>
+
 </body>
 </html>
