@@ -120,7 +120,6 @@ input,textarea,select{
   color:#fff;
 }
 
-/* preview */
 #preview{
   width:60px;
   height:60px;
@@ -173,7 +172,6 @@ input,textarea,select{
   <input id="name" placeholder="Nome">
   <input id="members" placeholder="Membros">
 
-  <!-- UPLOAD -->
   <input type="file" id="imgFile" accept="image/*">
   <img id="preview">
 
@@ -206,7 +204,7 @@ input,textarea,select{
 
 <script>
 const PW="1234";
-const KEY="groups_v5";
+const KEY="groups_v6";
 
 let groups=JSON.parse(localStorage.getItem(KEY))||[];
 let editIndex=null;
@@ -237,8 +235,18 @@ $("#login").onclick=()=>modal.classList.add("show");
 
 $("#doLogin").onclick=()=>{
   if($("#pass").value===PW){
+
     modal.classList.remove("show");
+
     $("#admin").style.display="block";
+
+    // 🔥 CORREÇÃO DO BUG
+    $("#login").style.display="none";
+    $("#logout").style.display="inline-block";
+
+    $("#erro").style.display="none";
+    $("#pass").value="";
+
   }else{
     $("#erro").style.display="block";
   }
@@ -246,6 +254,10 @@ $("#doLogin").onclick=()=>{
 
 $("#logout").onclick=()=>{
   $("#admin").style.display="none";
+
+  // 🔥 VOLTA BOTÕES
+  $("#login").style.display="inline-block";
+  $("#logout").style.display="none";
 };
 
 modal.onclick=(e)=>{
