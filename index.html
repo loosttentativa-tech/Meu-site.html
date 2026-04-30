@@ -75,53 +75,50 @@ button{
 <div id="lista"></div>
 
 </div>
+
 <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyA18Evh4E-BCu2P7ipJE7wmRWrtcpcuL4c",
-    authDomain: "website-e6c83.firebaseapp.com",
-    projectId: "website-e6c83",
-    storageBucket: "website-e6c83.firebasestorage.app",
-    messagingSenderId: "1005197181047",
-    appId: "1:1005197181047:web:6e3821ed4658d068524672",
-    measurementId: "G-TWE1M8NKZ9"
-  };
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+const firebaseConfig = {
+  apiKey: "SUA_KEY",
+  authDomain: "SEU_DOMINIO",
+  projectId: "SEU_ID"
+};
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const db = getFirestore();
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 let user = null;
 
 // LOGIN
 window.login = async () => {
-  const email = emailInput.value;
-  const senha = senhaInput.value;
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
 
   const res = await signInWithEmailAndPassword(auth, email, senha);
   user = res.user;
+
+  alert("Logado!");
   carregar();
 };
 
 // ADD
 window.addGrupo = async () => {
+
+  if(!user){
+    alert("Faça login primeiro");
+    return;
+  }
+
   await addDoc(collection(db, "grupos"), {
-    nome: nome.value,
-    foto: foto.value,
-    membros: Number(membros.value),
-    status: status.value,
+    nome: document.getElementById("nome").value,
+    foto: document.getElementById("foto").value,
+    membros: Number(document.getElementById("membros").value),
+    status: document.getElementById("status").value,
     owner: user.uid
   });
 
@@ -131,6 +128,7 @@ window.addGrupo = async () => {
 // LISTAR
 async function carregar(){
   lista.innerHTML = "";
+
   const query = await getDocs(collection(db, "grupos"));
 
   query.forEach(docu=>{
@@ -148,8 +146,8 @@ async function carregar(){
       </div>
     `;
 
-    // botão deletar (só dono)
-    if(user.uid === g.owner){
+    // remover só dono
+    if(user && user.uid === g.owner){
       const btn = document.createElement("button");
       btn.innerText = "Remover";
       btn.onclick = async ()=>{
