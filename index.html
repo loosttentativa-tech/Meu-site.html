@@ -92,51 +92,14 @@ body::before{
   gap:20px;
 }
 
-/* CARD */
 .public-card{
   background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(0,0,0,0.7));
   border-radius:20px;
   padding:18px;
   text-align:center;
   border:1px solid rgba(255,255,255,0.06);
-  transition:.3s;
   position:relative;
   backdrop-filter: blur(10px);
-
-  opacity:0;
-  transform:translateY(20px);
-}
-
-@keyframes fadeUp{
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-/* BORDA */
-.public-card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:20px;
-  padding:1px;
-  background:linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  opacity:0;
-  transition:.3s;
-}
-
-.public-card:hover::before{
-  opacity:1;
-}
-
-.public-card:hover{
-  transform:translateY(-8px) scale(1.02);
 }
 
 .public-card img{
@@ -145,12 +108,6 @@ body::before{
   border-radius:50%;
   margin-bottom:10px;
   border:2px solid #fff;
-  box-shadow:0 0 15px rgba(255,255,255,0.2);
-}
-
-.public-card h3{
-  font-size:16px;
-  margin:8px 0;
 }
 
 .status{
@@ -168,26 +125,8 @@ body::before{
   border-radius:50%;
 }
 
-.active{
-  background:#00ff88;
-  animation:pulse 1.5s infinite;
-}
-
-.inactive{
-  background:#ff3b3b;
-}
-
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(0,255,136,.5)}
-  70%{box-shadow:0 0 0 6px transparent}
-  100%{box-shadow:0 0 0 0 transparent}
-}
-
-.public-card p{
-  font-size:13px;
-  color:var(--muted);
-  margin:8px 0;
-}
+.active{ background:#00ff88; }
+.inactive{ background:#ff3b3b; }
 
 .public-card a{
   display:inline-block;
@@ -198,11 +137,6 @@ body::before{
   color:#000;
   font-weight:700;
   text-decoration:none;
-  transition:.2s;
-}
-
-.public-card a:hover{
-  transform:scale(1.08);
 }
 
 input,select,textarea{
@@ -220,11 +154,6 @@ input,select,textarea{
   gap:12px;
   align-items:center;
   padding:10px;
-  border-radius:12px;
-}
-
-.group-item:hover{
-  background:#141414;
 }
 
 .group-item img{
@@ -238,16 +167,13 @@ input,select,textarea{
   bottom:20px;
   right:20px;
   background:#111;
-  padding:12px 16px;
+  padding:12px;
   border-radius:10px;
-  border:1px solid #222;
   opacity:0;
-  transform:translateY(20px);
   transition:.3s;
 }
 .toast.show{
   opacity:1;
-  transform:translateY(0);
 }
 </style>
 </head>
@@ -264,12 +190,6 @@ input,select,textarea{
   </div>
 </div>
 
-<div style="margin-bottom:20px; opacity:.8">
-  <h1 style="font-size:28px; font-weight:800;">Grupos Premium</h1>
-  <p style="color:#888">Entre nos grupos mais ativos e exclusivos.</p>
-</div>
-
-<!-- ADM -->
 <div id="admin" style="display:none">
 
 <div class="card">
@@ -298,7 +218,7 @@ input,select,textarea{
 </div>
 
 <div class="card">
-  <div style="font-weight:600;margin-bottom:10px;">Grupos</div>
+  <div>Grupos</div>
   <div id="all-groups" class="grid-public"></div>
 </div>
 
@@ -307,6 +227,8 @@ input,select,textarea{
 <div id="toast" class="toast"></div>
 
 <script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
 const PW="1234";
 const KEY="groups_v2";
 
@@ -342,14 +264,13 @@ function render(){
 
   let html="";
 
-  groups.forEach((g,i)=>{
+  groups.forEach(g=>{
 
     $("#list").innerHTML+=`
       <div class="group-item">
         <img src="${g.img || 'https://via.placeholder.com/80'}">
-        <div style="flex:1">
+        <div>
           <b>${g.name}</b><br>
-          <small>${g.members} • ${g.status}</small><br>
           <button onclick="editGroup('${g.id}')">Editar</button>
           <button onclick="del('${g.id}')">Remover</button>
         </div>
@@ -359,13 +280,13 @@ function render(){
     const isActive = g.status === "ativo";
 
     html += `
-      <div class="public-card" style="animation:fadeUp .6s ease forwards; animation-delay:${i*0.08}s">
+      <div class="public-card">
         <img src="${g.img || 'https://via.placeholder.com/80'}">
         <h3>${g.name}</h3>
 
         <div class="status">
           <div class="dot ${isActive ? "active" : "inactive"}"></div>
-          ${isActive ? "Online agora" : "Offline"} • ${g.members}
+          ${g.members}
         </div>
 
         <p>${g.desc || ""}</p>
@@ -403,7 +324,6 @@ $("#save").onclick=()=>{
   localStorage.setItem(KEY,JSON.stringify(groups));
   render();
 
-  // limpar inputs
   $("#name").value="";
   $("#members").value="";
   $("#img").value="";
@@ -411,10 +331,10 @@ $("#save").onclick=()=>{
   $("#desc").value="";
   $("#status").value="ativo";
 
-  toast("Salvo com sucesso");
+  toast("Salvo");
 };
 
-function editGroup(id){
+window.editGroup = function(id){
   let g=groups.find(x=>x.id==id);
   edit=id;
   $("#name").value=g.name;
@@ -423,18 +343,19 @@ function editGroup(id){
   $("#link").value=g.link;
   $("#desc").value=g.desc;
   $("#status").value=g.status;
-}
+};
 
-function del(id){
+window.del = function(id){
   if(confirm("Remover grupo?")){
     groups=groups.filter(g=>g.id!=id);
     localStorage.setItem(KEY,JSON.stringify(groups));
     render();
-    toast("Removido");
   }
-}
+};
 
 render();
+
+});
 </script>
 
 </body>
