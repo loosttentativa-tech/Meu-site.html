@@ -38,12 +38,7 @@ body{
   align-items:center;
 }
 
-h2{
-  margin:0;
-  font-weight:600;
-}
-
-/* BOTÕES */
+/* BOTÃO */
 .btn{
   background:#fff;
   color:#000;
@@ -127,14 +122,34 @@ input,select,textarea{
   font-size:15px;
 }
 
-.public-card small{
-  color:var(--muted);
-}
-
 .public-card p{
   font-size:13px;
   color:var(--muted);
   margin:6px 0;
+}
+
+/* STATUS */
+.status{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+}
+
+.dot.active{
+  background:#00ff88;
+}
+
+.dot.inactive{
+  background:#ff3b3b;
 }
 
 /* BOTÃO ENTRAR */
@@ -149,7 +164,7 @@ input,select,textarea{
   font-weight:600;
 }
 
-/* TITULOS */
+/* TITULO */
 .section-title{
   font-size:16px;
   font-weight:600;
@@ -217,16 +232,10 @@ input,select,textarea{
 
 </div>
 
-<!-- PREVIEW -->
-<div id="preview" class="card"></div>
-
-<!-- PÚBLICO -->
+<!-- LISTA PÚBLICA -->
 <div class="card">
-  <div class="section-title">Grupos ativos</div>
-  <div id="ativos" class="grid-public"></div>
-
-  <div class="section-title" style="margin-top:20px">Grupos inativos</div>
-  <div id="inativos" class="grid-public"></div>
+  <div class="section-title">Grupos</div>
+  <div id="all-groups" class="grid-public"></div>
 </div>
 
 </div>
@@ -265,12 +274,11 @@ $("#logout").onclick=()=>{
 
 function render(){
   $("#list").innerHTML="";
-  $("#preview").innerHTML="";
-  $("#ativos").innerHTML="";
-  $("#inativos").innerHTML="";
+  $("#all-groups").innerHTML="";
 
   groups.forEach(g=>{
 
+    // ADM
     $("#list").innerHTML+=`
       <div class="group-item">
         <img src="${g.img}">
@@ -283,21 +291,26 @@ function render(){
       </div>
     `;
 
+    const isActive = g.status === "ativo";
+
+    // CARD PÚBLICO
     const card=`
       <div class="public-card">
         <img src="${g.img}">
         <h3>${g.name}</h3>
-        <small>${g.members}</small>
-        <p>${g.desc||""}</p>
+
+        <div class="status">
+          <div class="dot ${isActive ? "active" : "inactive"}"></div>
+          ${g.members}
+        </div>
+
+        <p>${g.desc || ""}</p>
+
         <a href="${g.link}" target="_blank">Entrar</a>
       </div>
     `;
 
-    if(g.status==="ativo"){
-      $("#ativos").innerHTML+=card;
-    }else{
-      $("#inativos").innerHTML+=card;
-    }
+    $("#all-groups").innerHTML+=card;
 
   });
 }
