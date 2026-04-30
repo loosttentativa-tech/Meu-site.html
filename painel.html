@@ -2,49 +2,141 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel</title>
 
 <style>
 body{
-background:#000;
-color:#fff;
-font-family:Arial;
-padding:20px;
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #111 0%, #000 70%);
+    color:#fff;
+    padding:20px;
 }
 
-.card{
-background:#111;
-padding:15px;
-margin:10px 0;
-border-radius:10px;
-display:flex;
-align-items:center;
-gap:15px;
+/* TITULO */
+h1,h3{
+    text-align:center;
 }
 
-img{
-width:60px;
-height:60px;
-border-radius:50%;
-}
-
-button{
-padding:8px;
-margin:5px;
-cursor:pointer;
-}
-
+/* INPUTS */
 input,select{
-padding:8px;
-margin:5px;
-width:200px;
+    padding:10px;
+    margin:6px 0;
+    width:100%;
+    max-width:320px;
+    border-radius:8px;
+    border:none;
+    outline:none;
+    background:#111;
+    color:#fff;
 }
 
-a{
-color:lightblue;
+/* BOTÕES GERAIS */
+button{
+    padding:10px 12px;
+    margin:5px;
+    cursor:pointer;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(135deg,#00ff88,#00c3ff);
+    color:#000;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 12px rgba(0,255,200,0.5);
+}
+
+/* CARD */
+.card{
+    background: rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    padding:15px;
+    margin:10px auto;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    max-width:600px;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+}
+
+/* IMG */
+img{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid rgba(255,255,255,0.2);
+}
+
+/* INFO */
+.card b{
+    font-size:16px;
+}
+
+.card small{
+    color:#aaa;
+}
+
+/* STATUS */
+.status{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    margin-left:5px;
+    box-shadow:0 0 10px currentColor;
+}
+
+.online{
+    background:#00ff7f;
+    color:#00ff7f;
+}
+
+.offline{
+    background:#ff3b3b;
+    color:#ff3b3b;
+}
+
+/* BOTÃO ENTRAR */
+.enter{
+    margin-left:auto;
+    padding:8px 10px;
+    border-radius:8px;
+    background:linear-gradient(135deg,#ffcc00,#ff8800);
+    color:#000;
+    font-weight:bold;
+    text-decoration:none;
+    transition:0.3s;
+    display:inline-block;
+}
+
+.enter:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 12px rgba(255,200,0,0.6);
+}
+
+/* AUTH BOX */
+#auth{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+/* PAINEL */
+#painel{
+    text-align:center;
 }
 </style>
 </head>
+
 <body>
 
 <h1>Painel</h1>
@@ -53,6 +145,7 @@ color:lightblue;
 <div id="auth">
   <input id="email" placeholder="Email">
   <input id="senha" type="password" placeholder="Senha">
+  <br>
   <button onclick="login()">Entrar</button>
   <button onclick="registrar()">Registrar</button>
 </div>
@@ -87,7 +180,6 @@ color:lightblue;
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
 import {
 getAuth,
 signInWithEmailAndPassword,
@@ -123,51 +215,26 @@ const db = getFirestore(app);
 
 let user = null;
 
-// 🔗 VALIDAR LINK WHATSAPP
 function linkValido(url){
-  url = url.trim();
-
   return url.startsWith("https://chat.whatsapp.com/") && url.length > 30;
 }
 
-// 🔐 REGISTRAR
 window.registrar = async()=>{
-  try{
-    const email = document.getElementById("email").value;
-    const senha = document.getElementById("senha").value;
-
-    await createUserWithEmailAndPassword(auth,email,senha);
-    alert("Conta criada!");
-  }catch(e){
-    alert(e.code);
-  }
+  const email = email.value;
+  const senha = senha.value;
+  await createUserWithEmailAndPassword(auth,email,senha);
 };
 
-// 🔓 LOGIN
 window.login = async()=>{
-  try{
-    const email = document.getElementById("email").value;
-    const senha = document.getElementById("senha").value;
-
-    await signInWithEmailAndPassword(auth,email,senha);
-    alert("Logado!");
-  }catch(e){
-    alert(e.code);
-  }
+  const email = email.value;
+  const senha = senha.value;
+  await signInWithEmailAndPassword(auth,email,senha);
 };
 
-// 🚪 LOGOUT
-window.logout = async()=>{
-  await signOut(auth);
-};
+window.logout = ()=>signOut(auth);
 
-// ➕ ADD GRUPO
 window.addGrupo = async()=>{
-
-  if(!user){
-    alert("Faça login primeiro");
-    return;
-  }
+  if(!user) return;
 
   const nome = document.getElementById("nome").value;
   const foto = document.getElementById("foto").value;
@@ -175,59 +242,40 @@ window.addGrupo = async()=>{
   const status = document.getElementById("status").value;
   const link = document.getElementById("link").value;
 
-  if(!linkValido(link)){
-    alert("Link do WhatsApp inválido");
-    return;
-  }
+  if(!linkValido(link)) return alert("Link inválido");
 
   await addDoc(collection(db,"grupos"),{
-    nome,
-    foto,
+    nome,foto,
     membros:Number(membros),
-    status,
-    link,
+    status,link,
     owner:user.uid
   });
 };
 
-// 🔁 CONTROLE DE LOGIN
 onAuthStateChanged(auth,u=>{
-  const authDiv = document.getElementById("auth");
-  const painel = document.getElementById("painel");
-  const userInfo = document.getElementById("userInfo");
-
   if(u){
-    user = u;
-
-    authDiv.style.display = "none";
-    painel.style.display = "block";
-
-    userInfo.innerText = "Logado como: " + u.email;
-
+    user=u;
+    auth.style.display="none";
+    painel.style.display="block";
+    userInfo.innerText="Logado: "+u.email;
     carregar();
   } else {
-    user = null;
-
-    authDiv.style.display = "block";
-    painel.style.display = "none";
+    user=null;
+    auth.style.display="block";
+    painel.style.display="none";
   }
 });
 
-// 📦 LISTAR GRUPOS DO USUÁRIO
 function carregar(){
+  const lista=document.getElementById("lista");
 
-  const lista = document.getElementById("lista");
+  const q=query(collection(db,"grupos"),where("owner","==",user.uid));
 
-  const q = query(
-    collection(db,"grupos"),
-    where("owner","==",user.uid)
-  );
-
-  onSnapshot(q,snapshot=>{
+  onSnapshot(q,snap=>{
     lista.innerHTML="";
 
-    snapshot.forEach(docu=>{
-      const g = docu.data();
+    snap.forEach(d=>{
+      const g=d.data();
 
       const div=document.createElement("div");
       div.className="card";
@@ -235,12 +283,17 @@ function carregar(){
       div.innerHTML=`
         <img src="${g.foto}">
         <div>
-          <b>${g.nome}</b><br>
-          ${g.membros} membros<br>
-          <a href="${g.link}" target="_blank">Entrar no grupo</a>
+          <b>${g.nome}</b>
+          <span class="status ${g.status}"></span><br>
+          <small>${g.membros} membros</small>
         </div>
-        <button onclick="editar('${docu.id}')">Editar</button>
-        <button onclick="remover('${docu.id}')">Remover</button>
+
+        <a class="enter" href="${g.link}" target="_blank">
+          Entrar
+        </a>
+
+        <button onclick="editar('${d.id}')">Editar</button>
+        <button onclick="remover('${d.id}')">Excluir</button>
       `;
 
       lista.appendChild(div);
@@ -248,26 +301,20 @@ function carregar(){
   });
 }
 
-// ❌ REMOVER
 window.remover = async(id)=>{
   await deleteDoc(doc(db,"grupos",id));
 };
 
-// ✏️ EDITAR
 window.editar = async(id)=>{
+  const nome = prompt("Novo nome:");
+  const link = prompt("Novo link:");
 
-  const novoNome = prompt("Novo nome:");
-  const novoLink = prompt("Novo link WhatsApp:");
-
-  if(novoLink && !linkValido(novoLink)){
-    alert("Link inválido!");
+  if(link && !linkValido(link)){
+    alert("Link inválido");
     return;
   }
 
-  await updateDoc(doc(db,"grupos",id),{
-    nome: novoNome,
-    link: novoLink
-  });
+  await updateDoc(doc(db,"grupos",id),{nome,link});
 };
 
 </script>
