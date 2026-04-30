@@ -3,151 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ENGAJA ELITE</title>
+<title>Meus Grupos</title>
 
 <style>
-:root{
-  --bg:#050505;
-  --card:#0e0e0e;
-  --white:#ffffff;
-  --muted:#777;
-}
-
-*{margin:0;padding:0;box-sizing:border-box}
-
 body{
-  font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;
-  background: radial-gradient(circle at top,#1a1a1a,#050505);
+  background:#000;
   color:#fff;
-}
-
-body::before{
-  content:"";
-  position:fixed;
-  width:200%;
-  height:200%;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,0.05),transparent);
-  animation:shine 10s linear infinite;
-}
-@keyframes shine{
-  100%{transform:translateX(50%)}
+  font-family:Arial;
 }
 
 .container{
-  max-width:1000px;
+  max-width:900px;
   margin:auto;
-  padding:20px;
-}
-
-.header{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:20px;
-}
-
-.btn{
-  background:#fff;
-  color:#000;
-  padding:8px 14px;
-  border:none;
-  border-radius:999px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:20px;
 }
 
 .card{
   background:#111;
-  padding:20px;
-  border-radius:20px;
-  text-align:center;
+  padding:15px;
+  border-radius:10px;
+  margin:10px 0;
+  display:flex;
+  align-items:center;
+  gap:15px;
 }
 
 .card img{
-  width:80px;
-  height:80px;
+  width:60px;
+  height:60px;
   border-radius:50%;
 }
 
 .status{
-  font-size:13px;
-  color:var(--muted);
-  margin-top:4px;
-}
-
-.dot{
-  width:8px;
-  height:8px;
+  width:10px;
+  height:10px;
   border-radius:50%;
-  display:inline-block;
-  margin-right:5px;
 }
 
-.active{background:#00ff88;}
-.inactive{background:#ff3b3b;}
+.online{background:lime;}
+.offline{background:red;}
 
-.card a{
-  display:inline-block;
-  margin-top:10px;
-  padding:8px 14px;
-  border-radius:999px;
+button{
   background:#fff;
   color:#000;
-  text-decoration:none;
-}
-
-.admin-item{
-  background:#111;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:10px;
-  display:flex;
-  justify-content:space-between;
-}
-
-input,textarea,select{
-  width:100%;
-  padding:10px;
-  margin-bottom:10px;
-  border-radius:10px;
-  border:1px solid #222;
-  background:#000;
-  color:#fff;
-}
-
-#preview{
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  display:none;
-  margin-bottom:10px;
-}
-
-/* LOGIN */
-.login-modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.7);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  opacity:0;
-  pointer-events:none;
-  transition:.3s;
-}
-.login-modal.show{
-  opacity:1;
-  pointer-events:auto;
-}
-.login-box{
-  background:#111;
-  padding:20px;
-  border-radius:15px;
+  border:none;
+  padding:5px 10px;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -156,219 +56,102 @@ input,textarea,select{
 
 <div class="container">
 
-<div class="header">
-  <h2>👑 ENGAJA ELITE</h2>
-  <div>
-    <button id="login" class="btn">Entrar</button>
-    <button id="logout" class="btn" style="display:none">Sair</button>
-  </div>
-</div>
+<h2>Login</h2>
+<input id="email" placeholder="Email">
+<input id="senha" type="password" placeholder="Senha">
+<button onclick="login()">Entrar</button>
 
-<!-- ADMIN -->
-<div id="admin" style="display:none">
+<h2>Adicionar Grupo</h2>
+<input id="nome" placeholder="Nome">
+<input id="foto" placeholder="URL da foto">
+<input id="membros" type="number" placeholder="Membros">
+<select id="status">
+  <option value="online">Online</option>
+  <option value="offline">Offline</option>
+</select>
+<button onclick="addGrupo()">Adicionar</button>
 
-  <div id="adminList"></div>
-
-  <input id="name" placeholder="Nome">
-  <input id="members" placeholder="Membros">
-
-  <input type="file" id="imgFile" accept="image/*">
-  <img id="preview">
-
-  <input id="img" placeholder="OU cole URL da imagem">
-
-  <input id="link" placeholder="Link WhatsApp">
-  
-  <select id="status">
-    <option value="ativo">Ativo</option>
-    <option value="inativo">Inativo</option>
-  </select>
-
-  <textarea id="desc" placeholder="Descrição"></textarea>
-
-  <button id="save" class="btn">Salvar</button>
-</div>
-
-<div id="list" class="grid"></div>
+<h2>Grupos</h2>
+<div id="lista"></div>
 
 </div>
 
-<!-- LOGIN -->
-<div id="loginModal" class="login-modal">
-  <div class="login-box">
-    <input type="password" id="pass" placeholder="Senha">
-    <button id="doLogin" class="btn">Entrar</button>
-    <p id="erro" style="display:none;color:red;">Senha incorreta</p>
-  </div>
-</div>
+<script type="module">
 
-<script>
-const PW="1234";
-const KEY="groups_v6";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-let groups=JSON.parse(localStorage.getItem(KEY))||[];
-let editIndex=null;
-let uploadedImage="";
-
-const $=e=>document.querySelector(e);
-
-/* UPLOAD */
-$("#imgFile").addEventListener("change", function(){
-  const file=this.files[0];
-  if(!file) return;
-
-  const reader=new FileReader();
-
-  reader.onload=function(e){
-    uploadedImage=e.target.result;
-    $("#preview").src=uploadedImage;
-    $("#preview").style.display="block";
-  };
-
-  reader.readAsDataURL(file);
-});
-
-/* LOGIN */
-const modal=$("#loginModal");
-
-$("#login").onclick=()=>modal.classList.add("show");
-
-$("#doLogin").onclick=()=>{
-  if($("#pass").value===PW){
-
-    modal.classList.remove("show");
-
-    $("#admin").style.display="block";
-
-    // 🔥 CORREÇÃO DO BUG
-    $("#login").style.display="none";
-    $("#logout").style.display="inline-block";
-
-    $("#erro").style.display="none";
-    $("#pass").value="";
-
-  }else{
-    $("#erro").style.display="block";
-  }
+const firebaseConfig = {
+  apiKey: "SUA_KEY",
+  authDomain: "SEU_DOMINIO",
+  projectId: "SEU_ID"
 };
 
-$("#logout").onclick=()=>{
-  $("#admin").style.display="none";
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore();
 
-  // 🔥 VOLTA BOTÕES
-  $("#login").style.display="inline-block";
-  $("#logout").style.display="none";
+let user = null;
+
+// LOGIN
+window.login = async () => {
+  const email = emailInput.value;
+  const senha = senhaInput.value;
+
+  const res = await signInWithEmailAndPassword(auth, email, senha);
+  user = res.user;
+  carregar();
 };
 
-modal.onclick=(e)=>{
-  if(e.target===modal) modal.classList.remove("show");
+// ADD
+window.addGrupo = async () => {
+  await addDoc(collection(db, "grupos"), {
+    nome: nome.value,
+    foto: foto.value,
+    membros: Number(membros.value),
+    status: status.value,
+    owner: user.uid
+  });
+
+  carregar();
 };
 
-/* VALIDAR */
-function validLink(link){
-  return link.includes("chat.whatsapp.com");
-}
+// LISTAR
+async function carregar(){
+  lista.innerHTML = "";
+  const query = await getDocs(collection(db, "grupos"));
 
-/* RENDER */
-function render(){
-  $("#list").innerHTML="";
-  $("#adminList").innerHTML="";
+  query.forEach(docu=>{
+    const g = docu.data();
 
-  groups.forEach((g,i)=>{
-    const isActive=g.status==="ativo";
+    const div = document.createElement("div");
+    div.className = "card";
 
-    $("#list").innerHTML+=`
-    <div class="card">
-      <img src="${g.img}">
-      <h3>${g.name}</h3>
-
-      <div>Membros: ${g.members}</div>
-
-      <div class="status">
-        <span class="dot ${isActive?'active':'inactive'}"></span>
-        ${isActive ? "Online" : "Offline"}
-      </div>
-
-      <p>${g.desc||""}</p>
-
-      <a href="${g.link}" target="_blank">Entrar</a>
-    </div>
-    `;
-
-    $("#adminList").innerHTML+=`
-    <div class="admin-item">
-      <span>${g.name}</span>
+    div.innerHTML = `
+      <img src="${g.foto}">
       <div>
-        <button onclick="editGroup(${i})">Editar</button>
-        <button onclick="deleteGroup(${i})">Remover</button>
+        <b>${g.nome}</b><br>
+        ${g.membros} membros<br>
+        <div class="status ${g.status}"></div>
       </div>
-    </div>
     `;
+
+    // botão deletar (só dono)
+    if(user.uid === g.owner){
+      const btn = document.createElement("button");
+      btn.innerText = "Remover";
+      btn.onclick = async ()=>{
+        await deleteDoc(doc(db,"grupos",docu.id));
+        carregar();
+      };
+      div.appendChild(btn);
+    }
+
+    lista.appendChild(div);
   });
 }
 
-/* SALVAR */
-$("#save").onclick=()=>{
-  let data={
-    name:$("#name").value,
-    members:$("#members").value,
-    img: uploadedImage || $("#img").value,
-    link:$("#link").value,
-    status:$("#status").value,
-    desc:$("#desc").value
-  };
-
-  if(!validLink(data.link)){
-    return alert("Link inválido");
-  }
-
-  if(editIndex!==null){
-    groups[editIndex]=data;
-    editIndex=null;
-  }else{
-    groups.unshift(data);
-  }
-
-  localStorage.setItem(KEY,JSON.stringify(groups));
-  clearForm();
-  render();
-};
-
-/* EDITAR */
-window.editGroup=(i)=>{
-  let g=groups[i];
-  editIndex=i;
-
-  $("#name").value=g.name;
-  $("#members").value=g.members;
-  $("#img").value=g.img;
-  $("#link").value=g.link;
-  $("#status").value=g.status;
-  $("#desc").value=g.desc;
-};
-
-/* REMOVER */
-window.deleteGroup=(i)=>{
-  if(confirm("Remover grupo?")){
-    groups.splice(i,1);
-    localStorage.setItem(KEY,JSON.stringify(groups));
-    render();
-  }
-};
-
-/* LIMPAR */
-function clearForm(){
-  $("#name").value="";
-  $("#members").value="";
-  $("#img").value="";
-  $("#link").value="";
-  $("#desc").value="";
-  uploadedImage="";
-  $("#preview").style.display="none";
-  $("#imgFile").value="";
-}
-
-render();
 </script>
 
 </body>
