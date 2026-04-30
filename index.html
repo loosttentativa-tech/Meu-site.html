@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ENGAJA ELITE </title>
+<title>ENGAJA ELITE</title>
 
 <link rel="icon" href="https://storageblack.cloud/midia/1773117490092.jpg">
 
@@ -71,19 +71,17 @@ body{
   color:#fff;
   transition:.3s;
 }
-
 .btn.primary{
   background:linear-gradient(45deg,var(--gold),#aaa);
   color:#000;
   box-shadow:var(--glow);
 }
-
 .btn:hover{
   transform:scale(1.05);
   box-shadow:var(--glow);
 }
 
-/* GRID */
+/* GRID ADM */
 .grid{
   display:grid;
   grid-template-columns:1fr 350px;
@@ -99,7 +97,7 @@ body{
   backdrop-filter:blur(6px);
 }
 
-/* LISTA */
+/* LISTA ADM */
 .group-item{
   display:flex;
   gap:10px;
@@ -111,7 +109,6 @@ body{
   background:rgba(255,255,255,0.05);
   transform:scale(1.02);
 }
-
 .group-item img{
   width:60px;
   height:60px;
@@ -128,6 +125,43 @@ input,select,textarea{
   background:#000;
   color:#fff;
   margin-bottom:8px;
+}
+
+/* PUBLIC GRID */
+.grid-public{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:15px;
+  margin-top:10px;
+}
+
+.public-card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,215,0,0.2);
+  border-radius:12px;
+  padding:12px;
+  text-align:center;
+  transition:.3s;
+}
+.public-card:hover{
+  transform:translateY(-5px) scale(1.03);
+  box-shadow:0 0 15px rgba(255,215,0,0.3);
+}
+.public-card img{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  object-fit:cover;
+}
+.public-card a{
+  display:inline-block;
+  margin-top:8px;
+  padding:6px 10px;
+  background:linear-gradient(45deg,#FFD700,#aaa);
+  color:#000;
+  border-radius:6px;
+  text-decoration:none;
+  font-weight:bold;
 }
 
 /* TOAST */
@@ -148,7 +182,6 @@ input,select,textarea{
   transform:translateY(0);
 }
 
-/* RESPONSIVO */
 @media(max-width:900px){
   .grid{grid-template-columns:1fr}
 }
@@ -171,6 +204,7 @@ input,select,textarea{
   </div>
 </div>
 
+<!-- ADM -->
 <div id="admin" style="display:none">
 
 <div class="grid">
@@ -181,7 +215,7 @@ input,select,textarea{
 </div>
 
 <div class="card">
-  <h3 id="formTitle">Novo Grupo</h3>
+  <h3>Novo Grupo</h3>
 
   <input id="name" placeholder="Nome">
   <input id="members" placeholder="Membros">
@@ -202,7 +236,17 @@ input,select,textarea{
 
 </div>
 
+<!-- PREVIEW -->
 <div id="preview" class="card" style="margin-top:20px"></div>
+
+<!-- ÁREA PÚBLICA -->
+<div class="card" style="margin-top:20px">
+  <h2>🔥 Grupos Ativos</h2>
+  <div id="ativos" class="grid-public"></div>
+
+  <h2 style="margin-top:20px">🚫 Grupos Inativos</h2>
+  <div id="inativos" class="grid-public"></div>
+</div>
 
 </div>
 
@@ -241,8 +285,12 @@ $("#logout").onclick=()=>{
 function render(){
   $("#list").innerHTML="";
   $("#preview").innerHTML="";
+  $("#ativos").innerHTML="";
+  $("#inativos").innerHTML="";
 
   groups.forEach(g=>{
+
+    // ADM
     $("#list").innerHTML+=`
       <div class="group-item">
         <img src="${g.img}">
@@ -255,6 +303,7 @@ function render(){
       </div>
     `;
 
+    // PREVIEW
     $("#preview").innerHTML+=`
       <div class="group-item">
         <img src="${g.img}">
@@ -264,6 +313,24 @@ function render(){
         </div>
       </div>
     `;
+
+    // PÚBLICO
+    const card=`
+      <div class="public-card">
+        <img src="${g.img}">
+        <h3>${g.name}</h3>
+        <small>${g.members}</small>
+        <p>${g.desc||""}</p>
+        <a href="${g.link}" target="_blank">Entrar</a>
+      </div>
+    `;
+
+    if(g.status==="ativo"){
+      $("#ativos").innerHTML+=card;
+    }else{
+      $("#inativos").innerHTML+=card;
+    }
+
   });
 }
 
