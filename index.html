@@ -48,6 +48,7 @@ button{
   border:none;
   padding:5px 10px;
   cursor:pointer;
+  margin-top:5px;
 }
 </style>
 </head>
@@ -58,8 +59,10 @@ button{
 
 <h2>Login</h2>
 <input id="email" placeholder="Email">
-<input id="senha" type="password" placeholder="Senha">
+<input id="senha" type="password" placeholder="Senha"><br>
+
 <button onclick="login()">Entrar</button>
+<button onclick="registrar()">Registrar</button>
 
 <h2>Adicionar Grupo</h2>
 <input id="nome" placeholder="Nome">
@@ -79,8 +82,15 @@ button{
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import { 
+  getFirestore, collection, addDoc, getDocs, deleteDoc, doc 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "SUA_KEY",
@@ -94,19 +104,67 @@ const db = getFirestore(app);
 
 let user = null;
 
-// LOGIN
+// 🔐 REGISTRAR
+window.registrar = async () => {
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
+
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, senha);
+    user = res.user;
+
+    alert("Conta criada com sucesso!");
+    carregar();
+
+  } catch (error) {
+
+    if (error.code === "auth/email-already-in-use") {
+      alert("Esse email já está cadastrado.");
+    } 
+    else if (error.code === "auth/invalid-email") {
+      alert("Email inválido.");
+    } 
+    else if (error.code === "auth/weak-password") {
+      alert("Senha muito fraca (mínimo 6 caracteres).");
+    } 
+    else {
+      alert("Erro ao registrar.");
+      console.error(error);
+    }
+  }
+};
+
+// 🔓 LOGIN
 window.login = async () => {
   const email = document.getElementById("email").value;
   const senha = document.getElementById("senha").value;
 
-  const res = await signInWithEmailAndPassword(auth, email, senha);
-  user = res.user;
+  try {
+    const res = await signInWithEmailAndPassword(auth, email, senha);
+    user = res.user;
 
-  alert("Logado!");
-  carregar();
+    alert("Logado!");
+    carregar();
+
+  } catch (error) {
+
+    if (error.code === "auth/user-not-found") {
+      alert("Usuário não encontrado.");
+    } 
+    else if (error.code === "auth/wrong-password") {
+      alert("Senha incorreta.");
+    } 
+    else if (error.code === "auth/invalid-email") {
+      alert("Email inválido.");
+    } 
+    else {
+      alert("Erro ao fazer login.");
+      console.error(error);
+    }
+  }
 };
 
-// ADD
+// ➕ ADD
 window.addGrupo = async () => {
 
   if(!user){
@@ -125,7 +183,7 @@ window.addGrupo = async () => {
   carregar();
 };
 
-// LISTAR
+// 📦 LISTAR
 async function carregar(){
   lista.innerHTML = "";
 
@@ -146,7 +204,6 @@ async function carregar(){
       </div>
     `;
 
-    // remover só dono
     if(user && user.uid === g.owner){
       const btn = document.createElement("button");
       btn.innerText = "Remover";
