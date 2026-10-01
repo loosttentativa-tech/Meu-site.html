@@ -1,183 +1,85 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grupos</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feliz Aniversário, Maria!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<style>
-body{
-    margin:0;
-    font-family:'Segoe UI', sans-serif;
-    background: radial-gradient(circle at top, #111 0%, #000 70%);
-    color:#fff;
-    padding:20px;
-}
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
 
-/* TÍTULO */
-h1{
-    text-align:center;
-    margin-bottom:20px;
-}
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
 
-/* CARD */
-.card{
-    background: rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px);
-    padding:15px;
-    margin:12px auto;
-    border-radius:14px;
-    display:flex;
-    align-items:center;
-    gap:15px;
-    max-width:600px;
-    transition:0.3s;
-}
+    .emoji {
+      font-size: 60px;
+      margin-bottom: 10px;
+    }
 
-.card:hover{
-    transform: translateY(-4px);
-}
+    h1 {
+      font-size: 2.8rem;
+      color: #ff3b6b;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
 
-/* IMAGEM */
-img{
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    object-fit:cover;
-    border:2px solid rgba(255,255,255,0.2);
-}
+    p {
+      font-size: 1.2rem;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
 
-/* TEXTO */
-.info{
-    flex:1;
-}
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background-color: #ff3b6b;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(255, 59, 107, 0.4);
+      transition: transform 0.2s, background-color 0.2s;
+      cursor: pointer;
+      border: none;
+      font-size: 1rem;
+    }
 
-.nome{
-    font-size:16px;
-    font-weight:bold;
-}
-
-.desc{
-    font-size:12px;
-    color:#aaa;
-    margin-top:3px;
-}
-
-/* STATUS */
-.status{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    box-shadow:0 0 10px currentColor;
-}
-
-.online{
-    background:#00ff7f;
-    color:#00ff7f;
-}
-
-.offline{
-    background:#ff3b3b;
-    color:#ff3b3b;
-}
-
-/* BOTÃO ENTRAR */
-.btn{
-    padding:8px 12px;
-    border:none;
-    border-radius:8px;
-    font-weight:bold;
-    cursor:pointer;
-    background: linear-gradient(135deg,#00ff88,#00c3ff);
-    color:#000;
-    text-decoration: none;
-    font-size: 14px;
-    transition:0.3s;
-    display: inline-block;
-}
-
-.btn:hover{
-    transform: scale(1.05);
-    box-shadow:0 0 12px rgba(0,255,200,0.5);
-}
-
-#carregando {
-    text-align: center;
-    color: #00ff88;
-}
-</style>
+    .btn:hover {
+      background-color: #e02d5a;
+      transform: scale(1.05);
+    }
+  </style>
 </head>
-
 <body>
 
-<h1>Grupos Disponíveis</h1>
-
-<div id="lista-grupos">
-    <p id="carregando">Carregando grupos...</p>
-</div>
-
-<script type="module">
-// Importação do Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-// Sua configuração do Firebase (Mesma do painel)
-const firebaseConfig = {
-    apiKey: "AIzaSyA18Evh4E-BCu2P7ipJE7wmRWrtcpcuL4c",
-    authDomain: "website-e6c83.firebaseapp.com",
-    projectId: "website-e6c83",
-    storageBucket: "website-e6c83.firebasestorage.app",
-    messagingSenderId: "1005197181047",
-    appId: "1:1005197181047:web:6e3821ed4658d068524672"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Função para listar os grupos em tempo real
-function carregarGrupos() {
-    const listaDiv = document.getElementById("lista-grupos");
-    const q = query(collection(db, "grupos"));
-
-    onSnapshot(q, (snap) => {
-        listaDiv.innerHTML = ""; // Limpa a lista antes de carregar
-
-        if (snap.empty) {
-            listaDiv.innerHTML = "<p style='text-align:center;'>Nenhum grupo disponível no momento.</p>";
-            return;
-        }
-
-        snap.forEach((doc) => {
-            const g = doc.data();
-            
-            // Criando o elemento do card
-            const card = document.createElement("div");
-            card.className = "card";
-
-            card.innerHTML = `
-                <img src="${g.foto || 'https://via.placeholder.com/150'}">
-
-                <div class="info">
-                    <div class="nome">${g.nome}</div>
-                    <div class="desc">${g.membros} membros ativos</div>
-                </div>
-
-                <div class="status ${g.status}"></div>
-
-                <a href="${g.link}" target="_blank" class="btn">
-                    Entrar
-                </a>
-            `;
-
-            listaDiv.appendChild(card);
-        });
-    });
-}
-
-// Inicia a carga dos dados
-carregarGrupos();
-</script>
+  <div class="card">
+    <div class="emoji">🎉🎂🎈</div>
+    <h1>FELIZ ANIVERSÁRIO, MARIA!</h1>
+    <p>Desejo-te um dia cheio de alegria, paz e muitos momentos felizes! Que todos os teus sonhos se realizem.</p>
+    <button class="btn" onclick="alert('🥳 Parabéns e muitas felicidades!')">Clique aqui!</button>
+  </div>
 
 </body>
 </html>
